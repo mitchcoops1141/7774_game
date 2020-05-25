@@ -48,7 +48,6 @@ int main(void)
 			if ((menu_buttons->texture_id() == "Texture.Menu.Start") && input->is_button_state(Input::Button::SPACE, Input::Button_State::PRESSED))
 			{
 				//go to game scene
-				std::cout << "STARTING LEVEL" << std::endl;
 				scenes.push(new Game_Scene());
 				gameScene = false;
 			}

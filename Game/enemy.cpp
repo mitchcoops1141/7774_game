@@ -5,7 +5,7 @@ Enemy::Enemy(std::string id)
 	: Game_Object(id, "Texture.Enemy.Walk.Down")
 {
 	_speed = 0.15f;
-	_hp = 3;
+	_hp = 10;
 	_attackSpeed = 20.f;
 	_range = 350;
 
@@ -24,7 +24,7 @@ Enemy::~Enemy()
 {
 }
 
-void Enemy::simulate_AI(Uint32, Assets* assets, Input* input, Scene* scene)
+void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene)
 {
 	Game_Object* player = scene->get_game_object("Player"); // get player object
 	Vector_2D playerTranslation = player->translation(); //get player objects position
@@ -37,6 +37,12 @@ void Enemy::simulate_AI(Uint32, Assets* assets, Input* input, Scene* scene)
 	bool isWalking = true;
 	bool isAgro = false;
 	bool isDead = false;
+	bool isHurt = false;
+
+	if (_hp <= 0)
+	{
+		isDead = true;
+	}
 	
 	Vector_2D distanceToPlayer = (_translation - playerTranslation); //get distance to player
 	if (distanceToPlayer.magnitude() < _range) //if its less then the agro range
@@ -55,6 +61,23 @@ void Enemy::simulate_AI(Uint32, Assets* assets, Input* input, Scene* scene)
 		player->set_hp(player->hp() - 1); //subtract from player hp
 	}
 
+	//Vector_2D distanceToBall(50, 50);
+
+	std::vector<Game_Object*> game_objects = scene->get_game_objects(); //get all game objects
+
+	for (Game_Object* game_object : game_objects) //loop through game objects
+	{
+		if (game_object->id().substr(0, 4) == "Ball") //if the first 4 letters of object id are "Ball"
+		{
+			Vector_2D distanceToBall = (_translation - game_object->translation()); //get distance to ball
+			if ((distanceToBall.magnitude() > 0) && (distanceToBall.magnitude() < ((_collider.radius() * 2) + 5))) //if that distance is less than diameter of collider
+			{
+				isHurt = true;
+				scene->remove_game_object(game_object->id()); //remove the ball from the scene
+			}
+		}
+	}
+
 	switch (_state.top())
 	{
 	case State::walking: //while state is idle
@@ -66,8 +89,12 @@ void Enemy::simulate_AI(Uint32, Assets* assets, Input* input, Scene* scene)
 		{
 			push_state(State::dead, assets, input);
 		}
+		if (isHurt)
+		{
+			push_state(State::hurt, assets, input);
+		}
 		break;
-	case State::agro: //while state is walking
+	case State::agro: //while state is agro
 		if (isWalking)
 		{
 			pop_state(assets, input);
@@ -76,8 +103,24 @@ void Enemy::simulate_AI(Uint32, Assets* assets, Input* input, Scene* scene)
 		{
 			push_state(State::dead, assets, input);
 		}
+		if (isHurt)
+		{
+			push_state(State::hurt, assets, input);
+		}
 		break;
-	case State::dead: //while state shooting
+	case State::hurt: //while state is hurt
+		_hurtColorTimer_ms -= milliseconds_to_simulate;
+		if (_hurtColorTimer_ms < int(milliseconds_to_simulate))
+		{
+			pop_state(assets, input);
+		}
+		break;
+	case State::dead: //while state dead
+		_deathAnimationTimer_ms -= milliseconds_to_simulate;
+		if (_deathAnimationTimer_ms < milliseconds_to_simulate)
+		{
+			scene->remove_game_object(this->id());
+		}
 		break;
 	}
 }
@@ -88,6 +131,12 @@ void Enemy::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer
 	texture->update_frame(milliseconds_to_simulate);
 
 	Game_Object::render(milliseconds_to_simulate, assets, renderer, config, scene);
+}
+
+void Enemy::set_hp(int hp)
+{
+	_hp = hp; //set hp
+	//std::cout << "hp" + _hp << std::endl;
 }
 
 void Enemy::push_state(State state, Assets* assets, Input* input)
@@ -106,8 +155,9 @@ void Enemy::pop_state(Assets* assets, Input* input)
 	handle_enter_state(_state.top(), assets, input);
 }
 
-void Enemy::handle_enter_state(State state, Assets*, Input*)
+void Enemy::handle_enter_state(State state, Assets* assets, Input*)
 {
+	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
 	switch (state)
 	{
 	case State::walking:
@@ -120,19 +170,31 @@ void Enemy::handle_enter_state(State state, Assets*, Input*)
 		_texture_id = "Texture.Enemy.Agro.Down";
 		_speed = 0.25f;
 		break;
+	case State::hurt:
+		this->set_hp(_hp - 1); //run set hp function
+		_hurtColorTimer_ms = 250;
+		SDL_SetTextureColorMod(texture->data(), 255, 0, 0);
+		break;
 	case State::dead:
 		//texture = dead
+		_deathAnimationTimer_ms = 100 * 14;
+		_texture_id = "Texture.Enemy.Death";
+		_speed = 0.f;
 		break;
 	}
 }
 
-void Enemy::handle_exit_state(State state, Assets*)
+void Enemy::handle_exit_state(State state, Assets* assets)
 {
+	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
 	switch (state)
 	{
 	case State::walking:
 		break;
 	case State::agro:
+		break;
+	case State::hurt:
+		SDL_SetTextureColorMod(texture->data(), 255, 255, 255);
 		break;
 	case State::dead:
 		//give coins or someting

@@ -1,6 +1,7 @@
 #include "player_body.h"
 #include "paper_ball.h"
 #include <iostream>
+#include <string>
 
 Player_Body::Player_Body(std::string id)
 	: Game_Object(id, "Texture.Player.Body.Idle")
@@ -30,6 +31,9 @@ void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, I
 	Game_Object* player = scene->get_game_object("Player"); //get the palyer object
 
 	_translation = player->translation(); //set translation of the body to the translation of the player
+
+	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id); //get the texture of the player body
+	texture->set_frame_duration_milliseconds(int(player->attackSpeed() * 6)); //set frame length for texture
 	
 	_shoot_cooldown_ms -= milliseconds_to_simulate; //minus from the cooldown
 
@@ -53,10 +57,10 @@ void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, I
 	|| (input->is_button_state(Input::Button::SHOOTING_UP, Input::Button_State::DOWN))) //if shooting up
 	{
 		//check if cooldown is finished
-		if (_shoot_cooldown_ms < 0)
+		if (_shoot_cooldown_ms < int(milliseconds_to_simulate))
 		{
 			_isShooting = true; //set shooting variable to true
-			_shoot_cooldown_ms = player->attackSpeed() * 30; //reset the cooldown
+			_shoot_cooldown_ms = texture->get_frame_duration_milliseconds(); //reset the cooldown
 		}
 	}
 	else {
@@ -106,6 +110,10 @@ void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, I
 			_time_to_pop_ms -= milliseconds_to_simulate;
 			if (_time_to_pop_ms < int(milliseconds_to_simulate))
 			{
+				scene->add_game_object(new Paper_Ball(_ballID, scene, _shootDirection)); //add projectile object
+				_ballCounter++; //add one to the ball counter
+				_ballID = "Ball"; //reset the ball id
+				_ballID.append(std::to_string(_ballCounter)); //append the counter to the id to create "ball#"
 				pop_state(assets, input);
 			}
 		}
@@ -131,6 +139,8 @@ void Player_Body::pop_state(Assets* assets, Input* input)
 
 void Player_Body::handle_enter_state(State state, Assets* assets, Input* input)
 {
+	
+
 	switch (state)
 	{
 	case State::Idle:
@@ -141,37 +151,51 @@ void Player_Body::handle_enter_state(State state, Assets* assets, Input* input)
 		break;
 	case State::Shooting:
 	{
-		_time_to_pop_ms = 50 * 4; //reset the cooldown for determine length of shooting state duration
+		{
+			//get input direction of shooting and set texture to determined direction
+			if (input->is_button_state(Input::Button::SHOOTING_RIGHT, Input::Button_State::DOWN))
+			{
+				_texture_id = "Texture.Player.Body.Attack.Right";
+				_shootDirection = "right";
+				Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
+				_time_to_pop_ms = texture->get_frame_duration_milliseconds() * texture->get_frame_count(); //reset the cooldown for determine length of shooting state duration
+			}
+			else if (input->is_button_state(Input::Button::SHOOTING_LEFT, Input::Button_State::DOWN))
+			{
+				_texture_id = "Texture.Player.Body.Attack.Left";
+				_shootDirection = "left";
+				Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
+				_time_to_pop_ms = texture->get_frame_duration_milliseconds() * texture->get_frame_count(); //reset the cooldown for determine length of shooting state duration
+			}
+			else if (input->is_button_state(Input::Button::SHOOTING_UP, Input::Button_State::DOWN))
+			{
+				_texture_id = "Texture.Player.Body.Attack.Up";
+				_shootDirection = "up";
+				Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
+				_time_to_pop_ms = texture->get_frame_duration_milliseconds() * texture->get_frame_count(); //reset the cooldown for determine length of shooting state duration
+			}
+			else if (input->is_button_state(Input::Button::SHOOTING_DOWN, Input::Button_State::DOWN))
+			{
+				_texture_id = "Texture.Player.Body.Attack.Down";
+				_shootDirection = "down";
+				Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
+				_time_to_pop_ms = texture->get_frame_duration_milliseconds() * texture->get_frame_count(); //reset the cooldown for determine length of shooting state duration
+			}
 
-		//get input direction of shooting and set texture to determined direction
-		if (input->is_button_state(Input::Button::SHOOTING_RIGHT, Input::Button_State::DOWN))
-		{
-			_texture_id = "Texture.Player.Body.Attack.Right";
-		}
-		else if (input->is_button_state(Input::Button::SHOOTING_LEFT, Input::Button_State::DOWN))
-		{
-			_texture_id = "Texture.Player.Body.Attack.Left";
-		}
-		else if (input->is_button_state(Input::Button::SHOOTING_UP, Input::Button_State::DOWN))
-		{
-			_texture_id = "Texture.Player.Body.Attack.Up";
-		}
-		else if (input->is_button_state(Input::Button::SHOOTING_DOWN, Input::Button_State::DOWN))
-		{
-			_texture_id = "Texture.Player.Body.Attack.Down";
-		}
+			std::cout << "time to pop " + std::to_string(_time_to_pop_ms) << std::endl;
+			
 
-		Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id); //get animation
-		texture->reset(); // reset the animation
-
-		//shooting sounds
+			//shooting sounds
+		}
 		break;
 	}
 	}
 }
 
-void Player_Body::handle_exit_state(State state, Assets*)
+void Player_Body::handle_exit_state(State state, Assets* assets)
 {
+	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
+
 	switch (state)
 	{
 	case State::Idle:
@@ -181,6 +205,7 @@ void Player_Body::handle_exit_state(State state, Assets*)
 		break;
 	case State::Shooting:
 		_isShooting = false; //set shooting variable to false when not shooting
+		texture->reset(); // reset the animation
 		break;
 	}
 }

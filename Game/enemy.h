@@ -15,10 +15,14 @@ public:
 	virtual void simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene) override;
 	virtual void render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config, Scene* scene) override;
 
+	virtual void set_hp(int hp) override;
+	
+
 	enum class State
 	{
 		walking,
 		agro,
+		hurt,
 		dead
 	};
 
@@ -31,4 +35,6 @@ private:
 	void handle_exit_state(State state, Assets* assets);
 
 	std::stack<State> _state;
+	float _deathAnimationTimer_ms = 14 * 100;
+	int _hurtColorTimer_ms = 250;
 };

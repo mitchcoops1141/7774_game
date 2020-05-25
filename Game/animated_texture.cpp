@@ -16,6 +16,21 @@ Animated_Texture::~Animated_Texture()
 {
 }
 
+int Animated_Texture::get_frame_count()
+{
+	return _frame_count;
+}
+
+void Animated_Texture::set_frame_duration_milliseconds(Uint32 frame_duration_milliseconds)
+{
+	_frame_duration_milliseconds = frame_duration_milliseconds;
+}
+
+Uint32 Animated_Texture::get_frame_duration_milliseconds()
+{
+	return _frame_duration_milliseconds;
+}
+
 void Animated_Texture::update_frame(Uint32 milliseconds_to_simulate)
 {
 	_total_time_milliseconds += milliseconds_to_simulate;

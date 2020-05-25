@@ -124,7 +124,7 @@ Assets::Assets(SDL_Renderer* renderer)
 	//player body attack up
 	{
 		const int frame_count = 4;
-		const Uint32 frame_duration_milliseconds = 50;
+		const Uint32 frame_duration_milliseconds = 75;
 		Animated_Texture* texture = new Animated_Texture(
 			"Texture.Player.Body.Attack.Up",
 			"Assets/player.body.attack.up.png",
@@ -138,7 +138,7 @@ Assets::Assets(SDL_Renderer* renderer)
 	//player body attack down
 	{
 		const int frame_count = 4;
-		const Uint32 frame_duration_milliseconds = 50;
+		const Uint32 frame_duration_milliseconds = 75;
 		Animated_Texture* texture = new Animated_Texture(
 			"Texture.Player.Body.Attack.Down",
 			"Assets/player.body.attack.down.png",
@@ -152,7 +152,7 @@ Assets::Assets(SDL_Renderer* renderer)
 	//player body attack left
 	{
 		const int frame_count = 4;
-		const Uint32 frame_duration_milliseconds = 50;
+		const Uint32 frame_duration_milliseconds = 75;
 		Animated_Texture* texture = new Animated_Texture(
 			"Texture.Player.Body.Attack.Left",
 			"Assets/player.body.attack.left.png",
@@ -166,7 +166,7 @@ Assets::Assets(SDL_Renderer* renderer)
 	//player body attack right
 	{
 		const int frame_count = 4;
-		const Uint32 frame_duration_milliseconds = 50;
+		const Uint32 frame_duration_milliseconds = 75;
 		Animated_Texture* texture = new Animated_Texture(
 			"Texture.Player.Body.Attack.Right",
 			"Assets/player.body.attack.right.png",
@@ -306,7 +306,7 @@ Assets::Assets(SDL_Renderer* renderer)
 		_assets[texture->id()] = texture;
 	}
 
-	//Enemy walk down
+	//Enemy walk
 	{
 		const int frame_count = 4;
 		const Uint32 frame_duration_milliseconds = 150;
@@ -320,49 +320,7 @@ Assets::Assets(SDL_Renderer* renderer)
 		_assets[texture->id()] = texture;
 	}
 
-	//Enemy walk up
-	{
-		const int frame_count = 4;
-		const Uint32 frame_duration_milliseconds = 150;
-		Animated_Texture* texture = new Animated_Texture(
-			"Texture.Enemy.Walk.Up",
-			"Assets/enemy.walk.up.png",
-			renderer,
-			frame_count,
-			frame_duration_milliseconds,
-			true);
-		_assets[texture->id()] = texture;
-	}
-
-	//Enemy walk left
-	{
-		const int frame_count = 4;
-		const Uint32 frame_duration_milliseconds = 150;
-		Animated_Texture* texture = new Animated_Texture(
-			"Texture.Enemy.Walk.Left",
-			"Assets/enemy.walk.left.png",
-			renderer,
-			frame_count,
-			frame_duration_milliseconds,
-			true);
-		_assets[texture->id()] = texture;
-	}
-
-	//Enemy walk right
-	{
-		const int frame_count = 4;
-		const Uint32 frame_duration_milliseconds = 150;
-		Animated_Texture* texture = new Animated_Texture(
-			"Texture.Enemy.Walk.Right",
-			"Assets/enemy.walk.right.png",
-			renderer,
-			frame_count,
-			frame_duration_milliseconds,
-			true);
-		_assets[texture->id()] = texture;
-	}
-
-	//Enemy Agro Down
+	//Enemy Agro
 	{
 		const int frame_count = 4;
 		const Uint32 frame_duration_milliseconds = 100;
@@ -373,6 +331,20 @@ Assets::Assets(SDL_Renderer* renderer)
 			frame_count,
 			frame_duration_milliseconds,
 			true);
+		_assets[texture->id()] = texture;
+	}
+
+	//enemy dead
+	{
+		const int frame_count = 14;
+		const Uint32 frame_duration_milliseconds = 100;
+		Animated_Texture* texture = new Animated_Texture(
+			"Texture.Enemy.Death",
+			"Assets/enemy.death.png",
+			renderer,
+			frame_count,
+			frame_duration_milliseconds,
+			false);
 		_assets[texture->id()] = texture;
 	}
 

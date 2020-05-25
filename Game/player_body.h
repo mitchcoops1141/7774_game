@@ -24,7 +24,6 @@ public:
 	void push_state(State state, Assets* assets, Input* input);
 	void pop_state(Assets* assets, Input* input);
 
-
 private:
 	void handle_enter_state(State state, Assets* assets, Input* input);
 	void handle_exit_state(State state, Assets* assets);
@@ -34,6 +33,9 @@ private:
 	
 	bool _isWalking = false; //variable to determine if player is walking
 	bool _isShooting = false; //variable to determine if player is shooting
-	float _shoot_cooldown_ms = -1; //variable to determine cooldown
+	int _shoot_cooldown_ms = 120; //variable to determine cooldown
 	int _time_to_pop_ms; //variable to determine length of attacking animation
+	std::string _shootDirection; //variable to get direction of shot
+	std::string _ballID = "ball";
+	int _ballCounter = 0;
 };

@@ -12,7 +12,9 @@ Player::Player(std::string id)
 {
 	_speed = 0.5f;
 	_hp = 3;
-	_attackSpeed = 20.f;
+	_attackSpeed = 25.f; //starts at 25. can go up to infinite. lowest is 5
+	_projectileSpeed = 0.5f;
+	_range = 800;
 
 	_width = 150;
 	_height = 150;
@@ -30,6 +32,10 @@ Player::~Player()
 
 void Player::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene*)
 {	
+	if (_attackSpeed < 5)
+	{
+		_attackSpeed = 5;
+	}
 	_velocity = Vector_2D(0, 0);
 
 	//movement input
