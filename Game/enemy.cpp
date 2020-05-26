@@ -5,9 +5,10 @@ Enemy::Enemy(std::string id)
 	: Game_Object(id, "Texture.Enemy.Walk.Down")
 {
 	_speed = 0.15f;
-	_hp = 10;
+	_hp = 15;
 	_attackSpeed = 20.f;
 	_range = 350;
+	_knockback = 2.f;
 
 	_width = 150;
 	_height = 150;
@@ -44,36 +45,41 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 		isDead = true;
 	}
 	
-	Vector_2D distanceToPlayer = (_translation - playerTranslation); //get distance to player
-	if (distanceToPlayer.magnitude() < _range) //if its less then the agro range
+	if (!isDead) //run all this code if not dead
 	{
-		isAgro = true; //set agro to true
-		isWalking = false; //set walking to false
-	} 
-	else 
-	{
-		isWalking = true; //set walking to true
-		isAgro = false; //set agro to false
-	}
-
-	if (distanceToPlayer.magnitude() < ((_collider.radius() * 2) + 5))
-	{
-		player->set_hp(player->hp() - 1); //subtract from player hp
-	}
-
-	//Vector_2D distanceToBall(50, 50);
-
-	std::vector<Game_Object*> game_objects = scene->get_game_objects(); //get all game objects
-
-	for (Game_Object* game_object : game_objects) //loop through game objects
-	{
-		if (game_object->id().substr(0, 4) == "Ball") //if the first 4 letters of object id are "Ball"
+		Vector_2D distanceToPlayer = (_translation - playerTranslation); //get distance to player
+		if (distanceToPlayer.magnitude() < _range) //if its less then the agro range
 		{
-			Vector_2D distanceToBall = (_translation - game_object->translation()); //get distance to ball
-			if ((distanceToBall.magnitude() > 0) && (distanceToBall.magnitude() < ((_collider.radius() * 2) + 5))) //if that distance is less than diameter of collider
+			isAgro = true; //set agro to true
+			isWalking = false; //set walking to false
+		}
+		else
+		{
+			isWalking = true; //set walking to true
+			isAgro = false; //set agro to false
+		}
+
+		if (distanceToPlayer.magnitude() < ((_collider.radius() * 2) + 5))
+		{
+			player->set_hp(player->hp() - 1); //subtract from player hp
+		}
+
+		std::vector<Game_Object*> game_objects = scene->get_game_objects(); //get all game objects
+
+		for (Game_Object* game_object : game_objects) //loop through game objects
+		{
+			if (game_object->id().substr(0, 4) == "Ball") //if the first 4 letters of object id are "Ball"
 			{
-				isHurt = true;
-				scene->remove_game_object(game_object->id()); //remove the ball from the scene
+				Vector_2D centerOfEnemy(_translation.x() + _width / 2, _translation.y() + _height / 2); //get center of enemy
+				Vector_2D distanceToBall = (centerOfEnemy - game_object->translation()); //get distance to ball
+
+				if ((distanceToBall.magnitude() > 0) && (distanceToBall.magnitude() < ((_collider.radius() * 2)))) //if that distance is less than diameter of collider
+				{
+					_velocity += game_object->velocity(); //set velocity to balls velocity
+					_velocity.scale(_knockback); //scale it to the knockback
+					isHurt = true;
+					scene->remove_game_object(game_object->id()); //remove the ball from the scene
+				}
 			}
 		}
 	}
@@ -117,7 +123,7 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 		break;
 	case State::dead: //while state dead
 		_deathAnimationTimer_ms -= milliseconds_to_simulate;
-		if (_deathAnimationTimer_ms < milliseconds_to_simulate)
+		if (_deathAnimationTimer_ms < milliseconds_to_simulate * 2)
 		{
 			scene->remove_game_object(this->id());
 		}

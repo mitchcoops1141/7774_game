@@ -33,6 +33,8 @@ public:
 
 	void set_translation(Vector_2D translation);
 
+	Vector_2D velocity();
+
 	void set_speed(float speed);
 	float speed();
 
@@ -50,6 +52,7 @@ public:
 
 	void set_projectileSpeed(float projectile_speed);
 	float projectile_speed();
+
 protected:
 	std::string _id;
 	std::string _texture_id;
@@ -65,7 +68,7 @@ protected:
 	SDL_RendererFlip _flip;
 
 
-	//player attributes
+	//player and enemy attributes
 	float _speed;
 	int _hp;
 	float _attackDamage;

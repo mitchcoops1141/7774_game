@@ -6,6 +6,7 @@
 #include "background.h"
 #include "paper_ball.h"
 #include "enemy.h"
+#include "text.h"
 
 Game_Scene::Game_Scene()
 	: Scene("Game")

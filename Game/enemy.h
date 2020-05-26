@@ -37,4 +37,5 @@ private:
 	std::stack<State> _state;
 	float _deathAnimationTimer_ms = 14 * 100;
 	int _hurtColorTimer_ms = 250;
+	float _knockback;
 };

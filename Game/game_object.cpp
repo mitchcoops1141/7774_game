@@ -138,6 +138,11 @@ void Game_Object::set_translation(Vector_2D translation)
 	_translation = translation;
 }
 
+Vector_2D Game_Object::velocity()
+{
+	return _velocity;
+}
+
 void Game_Object::set_speed(float speed)
 {
 	_speed = speed;

@@ -32,6 +32,8 @@ Player::~Player()
 
 void Player::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene*)
 {	
+	_collider.set_translation(Vector_2D(_width / 2.0f, (float)_height));
+
 	if (_attackSpeed < 5)
 	{
 		_attackSpeed = 5;
