@@ -25,7 +25,7 @@ void Player_Legs::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Re
 	Game_Object::render(milliseconds_to_simulate, assets, renderer, config, scene);
 }
 
-void Player_Legs::simulate_AI(Uint32, Assets* assets, Input* input, Scene* scene)
+void Player_Legs::simulate_AI(Uint32, Assets* assets, Input* input, Scene* scene, SDL_Renderer*)
 {
 
 

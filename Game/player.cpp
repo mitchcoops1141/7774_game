@@ -6,6 +6,7 @@
 #include "paper_ball.h"
 #include <iostream>
 #include "enemy.h"
+#include "text.h"
 
 Player::Player(std::string id)
 	: Game_Object(id, "Texture.Player.Blank")
@@ -30,7 +31,7 @@ Player::~Player()
 {
 }
 
-void Player::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene*)
+void Player::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene*, SDL_Renderer*)
 {	
 	_collider.set_translation(Vector_2D(_width / 2.0f, (float)_height));
 
@@ -111,6 +112,7 @@ void Player::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input*
 	case State::Dead:
 		break;
 	}
+
 }
 
 void Player::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config, Scene* scene)

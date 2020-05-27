@@ -13,7 +13,7 @@ Background::~Background()
 {
 }
 
-void Background::simulate_AI(Uint32 , Assets* , Input* , Scene* )
+void Background::simulate_AI(Uint32 , Assets* , Input* , Scene*, SDL_Renderer*)
 {
 }
 

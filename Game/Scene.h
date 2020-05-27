@@ -30,6 +30,8 @@ public:
 
 	Vector_2D camera_tranlsation();
 
+	Vector_2D hud_translation();
+
 protected:
 	std::map<std::string, Game_Object*> _game_objects;
 	std::string                         _id;
@@ -37,4 +39,5 @@ protected:
 	SDL_Color _background_color;
 
 	Vector_2D _camera_translation;
+	Vector_2D _hud_translation;
 };

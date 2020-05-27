@@ -42,7 +42,7 @@ Paper_Ball::~Paper_Ball()
 {
 }
 
-void Paper_Ball::simulate_AI(Uint32, Assets*, Input*, Scene* scene)
+void Paper_Ball::simulate_AI(Uint32, Assets*, Input*, Scene* scene, SDL_Renderer*)
 {	
 	Vector_2D direction = (_removePosition - _translation); //get direction to the remove position
 	direction.normalize(); //normalize position

@@ -7,11 +7,13 @@
 #include "paper_ball.h"
 #include "enemy.h"
 #include "text.h"
+#include "hud.h"
 
 Game_Scene::Game_Scene()
 	: Scene("Game")
 {
 	add_game_object(new Background("Background"));
+	add_game_object(new HUD("HUD"));
 	add_game_object(new Player("Player"));
 	add_game_object(new Player_Legs("Player.Legs"));
 	add_game_object(new Player_Body("Player.Body"));
@@ -39,17 +41,14 @@ void Game_Scene::update(SDL_Window* window)
 	{
 		_camera_translation = Vector_2D(0, _camera_translation.y());
 	}
-
 	if (_camera_translation.x() > 1920)
 	{
 		_camera_translation = Vector_2D(1920, _camera_translation.y());
 	}
-
 	if (_camera_translation.y() < 0)
 	{
 		_camera_translation = Vector_2D(_camera_translation.x(), 0);
 	}
-
 	if (_camera_translation.y() > 1080)
 	{
 		_camera_translation = Vector_2D(_camera_translation.x(), 1080);

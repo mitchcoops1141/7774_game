@@ -156,6 +156,7 @@
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="game_scene.cpp" />
+    <ClCompile Include="hud.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu_buttons.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="engine.h" />
     <ClInclude Include="game_object.h" />
     <ClInclude Include="game_scene.h" />
+    <ClInclude Include="hud.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="menu_buttons.h" />
     <ClInclude Include="menu_scene.h" />

@@ -6,7 +6,7 @@
 Text::Text(SDL_Renderer* renderer, const char* text, SDL_Color color, std::string id)
 	: Asset(id)
 {
-	TTF_Font* font = TTF_OpenFont("Assets/comic.ttf", 15);
+	TTF_Font* font = TTF_OpenFont("Assets/comic.ttf", 30);
 	if (font == nullptr)
 	{
 		std::cout << "Failed to load font" << std::endl;
@@ -32,6 +32,7 @@ Text::Text(SDL_Renderer* renderer, const char* text, SDL_Color color, std::strin
 
 	SDL_FreeSurface(surface);
 }
+
 
 Text::~Text()
 {

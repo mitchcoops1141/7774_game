@@ -89,19 +89,19 @@ Engine::~Engine()
 {
 }
 
-void Engine::simulate(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scene, Input* input, Configuration* config)
+void Engine::simulate(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scene, Input* input, Configuration* config, SDL_Renderer* renderer)
 {
-	simulate_AI(milliseconds_to_simulate, assets, scene, input); //call simulate AI function
+	simulate_AI(milliseconds_to_simulate, assets, scene, input, renderer); //call simulate AI function
 	simulate_physics(milliseconds_to_simulate, assets, scene); //call simulate Physics function
 	render(milliseconds_to_simulate, assets, scene, config); //call render function
 }
 
-void Engine::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scene, Input* input)
+void Engine::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scene, Input* input, SDL_Renderer* renderer)
 {
 	std::vector<Game_Object*> game_objects = scene->get_game_objects(); //get all game objects
 	for (Game_Object* game_object : game_objects) //loop through game objects
 	{
-		game_object->simulate_AI(milliseconds_to_simulate, assets, input, scene); //for each objects call the simulate AI function
+		game_object->simulate_AI(milliseconds_to_simulate, assets, input, scene, renderer); //for each objects call the simulate AI function
 	}
 }
 

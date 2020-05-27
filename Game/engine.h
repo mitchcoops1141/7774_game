@@ -16,13 +16,13 @@ public:
 	Engine(std::string window_name, Configuration* config);
 	~Engine();
 
-	void simulate(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scene, Input* input, Configuration* config);
+	void simulate(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scene, Input* input, Configuration* config, SDL_Renderer* renderer);
 
 	SDL_Renderer* renderer();
 	SDL_Window*   window();
 
 private:
-	void simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scene, Input* niput);
+	void simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scene, Input* input, SDL_Renderer* renderer);
 	void simulate_physics(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scene);
 	void render(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scene, Configuration* config);
 

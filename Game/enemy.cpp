@@ -25,7 +25,7 @@ Enemy::~Enemy()
 {
 }
 
-void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene)
+void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer*)
 {
 	Game_Object* player = scene->get_game_object("Player"); // get player object
 	Vector_2D playerTranslation = player->translation(); //get player objects position
@@ -34,7 +34,7 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 	_velocity += directionToPlayer; //move towards the player
 	_velocity.scale(_speed); //at the scale of the speed
 
-
+	//state variables
 	bool isWalking = true;
 	bool isAgro = false;
 	bool isDead = false;
@@ -59,7 +59,7 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 			isAgro = false; //set agro to false
 		}
 
-		if (distanceToPlayer.magnitude() < ((_collider.radius() * 2) + 5))
+		if (distanceToPlayer.magnitude() < ((_collider.radius() * 2) + 5)) //if the player is in contact range ot enemy
 		{
 			player->set_hp(player->hp() - 1); //subtract from player hp
 		}

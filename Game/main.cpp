@@ -20,16 +20,14 @@ int main(void)
 	Engine* engine = new Engine("Game", config); //create engine object
 	Assets* assets = new Assets(engine->renderer()); //create assets object
 	Input* input = new Input(); //create input object
-	//Scene* game_scene = new Game_Scene(); //create scene object
 	Editor* editor = new Editor(L"Game"); //object
+	
 
 
 	std::stack<Scene*> scenes;
 	scenes.push(new Menu_Scene());
 	
-	Game_Object* menu_buttons = scenes.top()->get_game_object("Menu");
-
-	
+	Game_Object* menu_buttons = scenes.top()->get_game_object("Menu");	
 
 	//calculate frames
 	const Uint32 milliseconds_per_seconds = 1000;
@@ -39,17 +37,17 @@ int main(void)
 	Uint32 frame_start_time_ms = 0;
 	Uint32 frame_end_time_ms   = frame_time_ms;
 
-	bool gameScene = true;
+	bool gameScene = false;
 	//main game loop
 	while(!input->is_button_state(Input::Button::QUIT, Input::Button_State::PRESSED))
 	{
-		if (gameScene)
+		if (!gameScene)
 		{
 			if ((menu_buttons->texture_id() == "Texture.Menu.Start") && input->is_button_state(Input::Button::SPACE, Input::Button_State::PRESSED))
 			{
 				//go to game scene
 				scenes.push(new Game_Scene());
-				gameScene = false;
+				gameScene = true;
 			}
 			else if ((menu_buttons->texture_id() == "Texture.Menu.Settings") && input->is_button_state(Input::Button::SPACE, Input::Button_State::PRESSED))
 			{
@@ -66,7 +64,7 @@ int main(void)
 		scenes.top()->update(engine->window());
 		input->get_input(); //call input: get_input to get players inputs whenever they press something
 		editor->update(input, scenes.top(), config); //update the editor by passing in the input scene and config objects
-		engine->simulate(previous_frame_duration, assets, scenes.top(), input, config); //simulate scene
+		engine->simulate(previous_frame_duration, assets, scenes.top(), input, config, engine->renderer()); //simulate scene
 
 		//calculate frames
 		const Uint32 current_time_ms   = SDL_GetTicks();

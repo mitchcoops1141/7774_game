@@ -6,7 +6,7 @@
 #include "game_object.h"
 
 Scene::Scene(std::string id)
-	: _camera_translation(0.f, 0.f)
+	: _camera_translation(0.f, 0.f), _hud_translation(0.f, 0.f)
 {
 	_id = id; //set id
 }
@@ -61,4 +61,9 @@ SDL_Color Scene::background_color()
 Vector_2D Scene::camera_tranlsation()
 {
 	return _camera_translation;
+}
+
+Vector_2D Scene::hud_translation()
+{
+	return _hud_translation;
 }

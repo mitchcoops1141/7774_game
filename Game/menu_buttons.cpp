@@ -19,7 +19,7 @@ Menu_Buttons::~Menu_Buttons()
 {
 }
 
-void Menu_Buttons::simulate_AI(Uint32, Assets* assets, Input* input, Scene*)
+void Menu_Buttons::simulate_AI(Uint32, Assets* assets, Input* input, Scene*, SDL_Renderer*)
 {
 	
 	switch (_state.top())

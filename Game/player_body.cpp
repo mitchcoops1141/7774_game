@@ -26,7 +26,7 @@ void Player_Body::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Re
 	Game_Object::render(milliseconds_to_simulate, assets, renderer, config, scene);
 }
 
-void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene)
+void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer*)
 {
 	Game_Object* player = scene->get_game_object("Player"); //get the palyer object
 

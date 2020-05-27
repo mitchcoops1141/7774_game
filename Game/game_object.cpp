@@ -2,6 +2,7 @@
 
 #include "game_object.h"
 #include "text.h"
+#include <iostream>
 
 
 Game_Object::Game_Object(std::string id, std::string texture_id)
@@ -110,7 +111,7 @@ void Game_Object::render(Uint32, Assets* assets, SDL_Renderer* renderer, Configu
 		collider_destination.h = (int)(_collider.radius() * 2.0f);
 
 		collider_texture->render(renderer, nullptr, &collider_destination, SDL_FLIP_NONE);
-	}
+	}	
 }
 
 Vector_2D Game_Object::translation()
