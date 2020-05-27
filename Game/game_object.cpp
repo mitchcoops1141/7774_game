@@ -164,32 +164,32 @@ int Game_Object::hp()
 	return _hp;
 }
 
-void Game_Object::set_attackDamage(float attackDamage)
+void Game_Object::set_attackDamage(int attackDamage)
 {
 	_attackDamage = attackDamage;
 }
 
-float Game_Object::attackDamage()
+int Game_Object::attackDamage()
 {
 	return _attackDamage;
 }
 
-void Game_Object::set_attackSpeed(float attackSpeed)
+void Game_Object::set_attackSpeed(int attackSpeed)
 {
 	_attackSpeed = attackSpeed;
 }
 
-float Game_Object::attackSpeed()
+int Game_Object::attackSpeed()
 {
 	return _attackSpeed;
 }
 
-void Game_Object::set_range(float range)
+void Game_Object::set_range(int range)
 {
 	_range = range;
 }
 
-float Game_Object::range()
+int Game_Object::range()
 {
 	return _range;
 }

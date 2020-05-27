@@ -38,4 +38,5 @@ private:
 	float _deathAnimationTimer_ms = 14 * 100;
 	int _hurtColorTimer_ms = 250;
 	float _knockback;
+	bool _isDead;
 };

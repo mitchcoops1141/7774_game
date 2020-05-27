@@ -263,17 +263,48 @@ Assets::Assets(SDL_Renderer* renderer)
 	{
 		Sound* sound = new Sound("Sound.Music", "Assets/music.wav");
 		_assets[sound->id()] = sound;
-
-		Mix_PlayChannel(0, sound->data(), -1);
-		Mix_Volume(0, MIX_MAX_VOLUME/4);
 	}
 
 	//walking sound effect
 	{
 		Sound* sound = new Sound("Sound.Player.Walking", "Assets/walking.wav");
 		_assets[sound->id()] = sound;
+	}
 
-		//Mix_PlayChannel(1, sound->data(), -1);
+	//paper hitting
+	{
+		Sound* sound = new Sound("Sound.Paper.Hitting", "Assets/paper.hitting.wav");
+		_assets[sound->id()] = sound;
+	}
+
+	//player hurt sound 1
+	{
+		Sound* sound = new Sound("Sound.Player.Hurt.1", "Assets/player.hurt.one.wav");
+		_assets[sound->id()] = sound;
+	}
+
+	//player hurt sound 2
+	{
+		Sound* sound = new Sound("Sound.Player.Hurt.2", "Assets/player.hurt.two.wav");
+		_assets[sound->id()] = sound;
+	}
+
+	//player hurt sound 3
+	{
+		Sound* sound = new Sound("Sound.Player.Hurt.3", "Assets/player.hurt.three.wav");
+		_assets[sound->id()] = sound;
+	}
+
+	//player hurt sound 4
+	{
+		Sound* sound = new Sound("Sound.Player.Hurt.4", "Assets/player.hurt.four.wav");
+		_assets[sound->id()] = sound;
+	}
+
+	//player hurt sound 5
+	{
+		Sound* sound = new Sound("Sound.Player.Hurt.5", "Assets/player.hurt.five.wav");
+		_assets[sound->id()] = sound;
 	}
 
 	//player death sound

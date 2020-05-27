@@ -116,6 +116,7 @@ void Player_Legs::handle_enter_state(State state, Assets* assets)
 		const int walking_channel = 1;
 		Sound* sound = (Sound*)assets->get_asset("Sound.Player.Walking");
 		Mix_PlayChannel(walking_channel, sound->data(), -1);
+		Mix_Volume(walking_channel, MIX_MAX_VOLUME / 2);
 		break;
 	}
 	}

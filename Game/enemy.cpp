@@ -6,9 +6,11 @@ Enemy::Enemy(std::string id)
 {
 	_speed = 0.15f;
 	_hp = 15;
-	_attackSpeed = 20.f;
+	_attackSpeed = 20;
 	_range = 350;
-	_knockback = 2.f;
+	_knockback = 2;
+
+	_isDead = false;
 
 	_width = 150;
 	_height = 150;
@@ -37,15 +39,9 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 	//state variables
 	bool isWalking = true;
 	bool isAgro = false;
-	bool isDead = false;
 	bool isHurt = false;
-
-	if (_hp <= 0)
-	{
-		isDead = true;
-	}
 	
-	if (!isDead) //run all this code if not dead
+	if (!_isDead) //run all this code if not dead
 	{
 		Vector_2D distanceToPlayer = (_translation - playerTranslation); //get distance to player
 		if (distanceToPlayer.magnitude() < _range) //if its less then the agro range
@@ -75,9 +71,19 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 
 				if ((distanceToBall.magnitude() > 0) && (distanceToBall.magnitude() < ((_collider.radius() * 2)))) //if that distance is less than diameter of collider
 				{
+					this->set_hp(_hp - player->attackDamage()); //run set hp function
+					isHurt = true; //set state to hurt
+
+					//hit sound effect
+					Sound* sound = (Sound*)assets->get_asset("Sound.Paper.Hitting");
+					Mix_PlayChannel(2, sound->data(), 0);
+					Mix_Volume(2, MIX_MAX_VOLUME / 2);
+
 					_velocity += game_object->velocity(); //set velocity to balls velocity
 					_velocity.scale(_knockback); //scale it to the knockback
-					isHurt = true;
+
+					
+					
 					scene->remove_game_object(game_object->id()); //remove the ball from the scene
 				}
 			}
@@ -91,7 +97,7 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 		{
 			push_state(State::agro, assets, input);
 		}
-		if (isDead)
+		if (_isDead)
 		{
 			push_state(State::dead, assets, input);
 		}
@@ -105,7 +111,7 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 		{
 			pop_state(assets, input);
 		} 
-		if (isDead)
+		if (_isDead)
 		{
 			push_state(State::dead, assets, input);
 		}
@@ -115,12 +121,16 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 		}
 		break;
 	case State::hurt: //while state is hurt
+	{
+
+
 		_hurtColorTimer_ms -= milliseconds_to_simulate;
 		if (_hurtColorTimer_ms < int(milliseconds_to_simulate))
 		{
 			pop_state(assets, input);
 		}
 		break;
+	}
 	case State::dead: //while state dead
 		_deathAnimationTimer_ms -= milliseconds_to_simulate;
 		if (_deathAnimationTimer_ms < milliseconds_to_simulate * 2)
@@ -142,7 +152,11 @@ void Enemy::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer
 void Enemy::set_hp(int hp)
 {
 	_hp = hp; //set hp
-	//std::cout << "hp" + _hp << std::endl;
+
+	if (_hp <= 0)
+	{
+		_isDead = true;
+	}
 }
 
 void Enemy::push_state(State state, Assets* assets, Input* input)
@@ -177,10 +191,11 @@ void Enemy::handle_enter_state(State state, Assets* assets, Input*)
 		_speed = 0.25f;
 		break;
 	case State::hurt:
-		this->set_hp(_hp - 1); //run set hp function
+	{
 		_hurtColorTimer_ms = 250;
 		SDL_SetTextureColorMod(texture->data(), 255, 0, 0);
 		break;
+	}
 	case State::dead:
 		//texture = dead
 		_deathAnimationTimer_ms = 100 * 14;

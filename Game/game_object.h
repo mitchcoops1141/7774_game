@@ -41,14 +41,14 @@ public:
 	virtual void set_hp(int hp);
 	int hp();
 
-	void set_attackDamage(float attackDamage);
-	float attackDamage();
+	void set_attackDamage(int attackDamage);
+	int attackDamage();
 
-	void set_attackSpeed(float attackSpeed);
-	float attackSpeed();
+	void set_attackSpeed(int attackSpeed);
+	int attackSpeed();
 
-	void set_range(float range);
-	float range();
+	void set_range(int range);
+	int range();
 
 	void set_projectileSpeed(float projectile_speed);
 	float projectile_speed();
@@ -71,8 +71,8 @@ protected:
 	//player and enemy attributes
 	float _speed;
 	int _hp;
-	float _attackDamage;
-	float _attackSpeed;
-	float _range;
+	int _attackDamage;
+	int _attackSpeed;
+	int _range;
 	float _projectileSpeed;
 };

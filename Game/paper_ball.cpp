@@ -9,8 +9,8 @@ Paper_Ball::Paper_Ball(std::string id, Scene* scene, std::string direction)
 	_width = 25;
 	_height = 25;
 
-	_speed = player->projectile_speed();
-	_range = player->range();
+	_speed = player->projectile_speed() / 100;
+	_range = player->range() * 10;
 
 	if (direction == "right") //if the ball is to move right
 	{

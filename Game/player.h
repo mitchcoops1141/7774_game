@@ -4,6 +4,8 @@
 #include "assets.h"
 #include "sound.h"
 #include <stack>
+#include <random>
+#include <time.h>
 
 
 class Player : public Game_Object
@@ -37,4 +39,8 @@ private:
 	float _invincibilityCooldown_ms = 750.f;
 
 	bool _isHurt = false;
+
+	int _seed;
+	std::minstd_rand0 _generator;
+
 };

@@ -47,6 +47,9 @@ int main(void)
 			{
 				//go to game scene
 				scenes.push(new Game_Scene());
+				Sound* sound = (Sound*)assets->get_asset("Sound.Music");
+				Mix_PlayChannel(0, sound->data(), -1);
+				Mix_Volume(0, MIX_MAX_VOLUME / 8);
 				gameScene = true;
 			}
 			else if ((menu_buttons->texture_id() == "Texture.Menu.Settings") && input->is_button_state(Input::Button::SPACE, Input::Button_State::PRESSED))
