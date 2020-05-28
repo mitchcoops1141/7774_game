@@ -17,7 +17,7 @@ Game_Scene::Game_Scene()
 	add_game_object(new Player("Player"));
 	add_game_object(new Player_Legs("Player.Legs"));
 	add_game_object(new Player_Body("Player.Body"));
-	add_game_object(new Enemy("Enemy"));
+	add_game_object(new Enemy("Enemy1", Vector_2D(1700, 200)));	
 }
 
 Game_Scene::~Game_Scene()

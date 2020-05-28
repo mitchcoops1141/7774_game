@@ -393,7 +393,11 @@ Assets::Assets(SDL_Renderer* renderer)
 		_assets[texture->id()] = texture;
 	}
 
-
+	//enemy death sound
+	{
+		Sound* sound = new Sound("Sound.Enemy.Death", "Assets/enemy.death.wav");
+		_assets[sound->id()] = sound;
+	}
 }
 
 Assets::~Assets()

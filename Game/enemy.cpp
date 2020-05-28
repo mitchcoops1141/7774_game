@@ -1,7 +1,7 @@
 #include "enemy.h"
 #include <iostream>
 
-Enemy::Enemy(std::string id)
+Enemy::Enemy(std::string id, Vector_2D translation)
 	: Game_Object(id, "Texture.Enemy.Walk.Down")
 {
 	_speed = 0.15f;
@@ -11,11 +11,13 @@ Enemy::Enemy(std::string id)
 	_knockback = 2;
 
 	_isDead = false;
+	_isWalking = true;
+	_isAgro = false;
 
 	_width = 150;
 	_height = 150;
 
-	_translation = Vector_2D(500, 500);
+	_translation = translation;
 
 	_collider.set_radius(_width / 5.0f);
 	_collider.set_translation(Vector_2D(_width / 2.0f, (float)_height));
@@ -37,8 +39,6 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 	_velocity.scale(_speed); //at the scale of the speed
 
 	//state variables
-	bool isWalking = true;
-	bool isAgro = false;
 	bool isHurt = false;
 	
 	if (!_isDead) //run all this code if not dead
@@ -46,13 +46,13 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 		Vector_2D distanceToPlayer = (_translation - playerTranslation); //get distance to player
 		if (distanceToPlayer.magnitude() < _range) //if its less then the agro range
 		{
-			isAgro = true; //set agro to true
-			isWalking = false; //set walking to false
+			_isAgro = true; //set agro to true
+			_isWalking = false; //set walking to false
 		}
 		else
 		{
-			isWalking = true; //set walking to true
-			isAgro = false; //set agro to false
+			_isWalking = true; //set walking to true
+			_isAgro = false; //set agro to false
 		}
 
 		if (distanceToPlayer.magnitude() < ((_collider.radius() * 2) + 5)) //if the player is in contact range ot enemy
@@ -87,13 +87,15 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 					scene->remove_game_object(game_object->id()); //remove the ball from the scene
 				}
 			}
+
+
 		}
 	}
 
 	switch (_state.top())
 	{
 	case State::walking: //while state is idle
-		if (isAgro)
+		if (_isAgro)
 		{
 			push_state(State::agro, assets, input);
 		}
@@ -107,7 +109,7 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 		}
 		break;
 	case State::agro: //while state is agro
-		if (isWalking)
+		if (_isWalking)
 		{
 			pop_state(assets, input);
 		} 
@@ -145,8 +147,7 @@ void Enemy::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer
 {
 	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
 	texture->update_frame(milliseconds_to_simulate);
-
-	Game_Object::render(milliseconds_to_simulate, assets, renderer, config, scene);
+	Game_Object::render(milliseconds_to_simulate, assets, renderer, config, scene);	
 }
 
 void Enemy::set_hp(int hp)
@@ -201,6 +202,10 @@ void Enemy::handle_enter_state(State state, Assets* assets, Input*)
 		_deathAnimationTimer_ms = 100 * 14;
 		_texture_id = "Texture.Enemy.Death";
 		_speed = 0.f;
+		Sound* sound = (Sound*)assets->get_asset("Sound.Enemy.Death"); //get death sound
+		Mix_PlayChannel(2, sound->data(), 0); //paly sound
+		Mix_Volume(2, MIX_MAX_VOLUME / 3); //lower volume
+		
 		break;
 	}
 }
