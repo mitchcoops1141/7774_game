@@ -337,6 +337,7 @@ Assets::Assets(SDL_Renderer* renderer)
 		_assets[texture->id()] = texture;
 	}
 
+	/*
 	//Enemy walk
 	{
 		const int frame_count = 4;
@@ -364,7 +365,7 @@ Assets::Assets(SDL_Renderer* renderer)
 			true);
 		_assets[texture->id()] = texture;
 	}
-
+	*/
 	//enemy dead
 	{
 		const int frame_count = 14;
@@ -414,4 +415,9 @@ Asset* Assets::get_asset(std::string id)
 	}
 
 	return _assets[id];
+}
+
+void Assets::add_animated_asset(Animated_Texture* animated_texture)
+{
+	_assets[animated_texture->id()] = animated_texture;
 }

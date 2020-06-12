@@ -61,6 +61,7 @@ int main(void)
 				//exit game
 			}
 		}
+
 		Uint32 previous_frame_duration = frame_end_time_ms - frame_start_time_ms;
 		frame_start_time_ms            = SDL_GetTicks();
 

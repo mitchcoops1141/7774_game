@@ -1,5 +1,6 @@
 #include "player_body.h"
 #include "paper_ball.h"
+#include "enemy.h"
 #include <iostream>
 #include <string>
 
@@ -26,7 +27,7 @@ void Player_Body::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Re
 	Game_Object::render(milliseconds_to_simulate, assets, renderer, config, scene);
 }
 
-void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer*)
+void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer* renderer)
 {
 	Game_Object* player = scene->get_game_object("Player"); //get the palyer object
 
@@ -50,6 +51,8 @@ void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, I
 		_isWalking = false; //player is not walking
 	};
 
+	
+
 	//check if shooting
 	if ((input->is_button_state(Input::Button::SHOOTING_RIGHT, Input::Button_State::DOWN)) //if shooting right
 	|| (input->is_button_state(Input::Button::SHOOTING_LEFT, Input::Button_State::DOWN)) //if shooting left
@@ -61,6 +64,7 @@ void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, I
 		{
 			_isShooting = true; //set shooting variable to true
 			_shoot_cooldown_ms = texture->get_frame_duration_milliseconds(); //reset the cooldown
+			scene->add_game_object(new Enemy("enemy" + std::to_string(_ballCounter), Vector_2D(1700, 200), assets, renderer));
 		}
 	}
 	else {

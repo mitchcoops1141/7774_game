@@ -16,6 +16,7 @@ public:
 	~Assets();
 
 	Asset* get_asset(std::string id);
+	void add_animated_asset(Animated_Texture* animated_texture);
 
 private:
 	std::map<std::string, Asset*> _assets;

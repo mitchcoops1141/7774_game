@@ -1,8 +1,9 @@
 #include "enemy.h"
 #include <iostream>
+#include <time.h>
 
-Enemy::Enemy(std::string id, Vector_2D translation)
-	: Game_Object(id, "Texture.Enemy.Walk.Down")
+Enemy::Enemy(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer* renderer)
+	: Game_Object(id, _walkingTextureID)
 {
 	_speed = 0.15f;
 	_hp = 15;
@@ -23,6 +24,41 @@ Enemy::Enemy(std::string id, Vector_2D translation)
 	_collider.set_translation(Vector_2D(_width / 2.0f, (float)_height));
 
 	_state.push(State::walking);
+	
+	
+	_frame_count = 4;
+	_frame_duration_milliseconds = 150;
+
+	_walkingTextureID = "Texture.Enemy.Walk.Down." + std::to_string(time(NULL));
+	_texture_id = _walkingTextureID; //i need this code otherwise error. dont ask why...
+
+	//create enemy walk down texture
+	{
+		Animated_Texture* texture = new Animated_Texture(
+			_walkingTextureID,
+			"Assets/enemy.walk.down.png",
+			renderer,
+			_frame_count,
+			_frame_duration_milliseconds,
+			true);
+		assets->add_animated_asset(texture);
+	}
+	
+	_frame_duration_milliseconds = 100;
+	_agroTextureID = "Texture.Enemy.Agro.Down." + std::to_string(time(NULL));
+
+	//create agro texture
+	{
+		Animated_Texture* texture = new Animated_Texture(
+			_agroTextureID,
+			"Assets/enemy.agro.down.png",
+			renderer,
+			_frame_count,
+			_frame_duration_milliseconds,
+			true);
+		assets->add_animated_asset(texture);
+	}
+	
 }
 
 Enemy::~Enemy()
@@ -146,6 +182,8 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 void Enemy::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config, Scene* scene)
 {
 	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
+	//texture->set_frame_count(_frame_count);
+	//texture->set_frame_duration_milliseconds(_frame_duration);
 	texture->update_frame(milliseconds_to_simulate);
 	Game_Object::render(milliseconds_to_simulate, assets, renderer, config, scene);	
 }
@@ -183,12 +221,12 @@ void Enemy::handle_enter_state(State state, Assets* assets, Input*)
 	{
 	case State::walking:
 		//texture = wlaking down
-		_texture_id = "Texture.Enemy.Walk.Down";
+		_texture_id = _walkingTextureID;
 		_speed = 0.15f;
 		break;
 	case State::agro:
 		//texture = agro down
-		_texture_id = "Texture.Enemy.Agro.Down";
+		_texture_id = _agroTextureID;
 		_speed = 0.25f;
 		break;
 	case State::hurt:

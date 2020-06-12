@@ -9,7 +9,7 @@
 class Enemy : public Game_Object
 {
 public:
-	Enemy(std::string id, Vector_2D translation);
+	Enemy(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer* renderer);
 	~Enemy();
 
 	virtual void simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer* renderer) override;
@@ -41,4 +41,10 @@ private:
 	bool _isDead;
 	bool _isWalking;
 	bool _isAgro;
+
+	Uint32 _frame_duration_milliseconds;
+	Uint32 _frame_count;
+
+	std::string _walkingTextureID;
+	std::string _agroTextureID;
 };

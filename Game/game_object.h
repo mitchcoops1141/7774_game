@@ -35,6 +35,8 @@ public:
 
 	Vector_2D velocity();
 
+	//void to_be_destroyed();
+
 	void set_speed(float speed);
 	float speed();
 
@@ -66,6 +68,8 @@ protected:
 	int _height;
 
 	SDL_RendererFlip _flip;
+
+	//bool _to_be_destroyed;
 
 
 	//player and enemy attributes
