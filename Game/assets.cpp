@@ -365,7 +365,7 @@ Assets::Assets(SDL_Renderer* renderer)
 			true);
 		_assets[texture->id()] = texture;
 	}
-	*/
+	
 	//enemy dead
 	{
 		const int frame_count = 14;
@@ -378,6 +378,34 @@ Assets::Assets(SDL_Renderer* renderer)
 			frame_duration_milliseconds,
 			false);
 		_assets[texture->id()] = texture;
+	}
+	
+	//ranged enemy dead
+	{
+		const int frame_count = 13;
+		const Uint32 frame_duration_milliseconds = 100;
+		Animated_Texture* texture = new Animated_Texture(
+			"Texture.Ranged.Enemy.Death",
+			"Assets/ranged.enemy.death.png",
+			renderer,
+			frame_count,
+			frame_duration_milliseconds,
+			false);
+		_assets[texture->id()] = texture;
+	}
+	*/
+	//spit ball (enemy projectile)
+	{
+	const int frame_count = 8;
+	const Uint32 frame_duration_milliseconds = 100;
+	Animated_Texture* texture = new Animated_Texture(
+		"Texture.Spit.Ball",
+		"Assets/spit.ball.png",
+		renderer,
+		frame_count,
+		frame_duration_milliseconds,
+		true);
+	_assets[texture->id()] = texture;
 	}
 
 	//shield
@@ -397,6 +425,12 @@ Assets::Assets(SDL_Renderer* renderer)
 	//enemy death sound
 	{
 		Sound* sound = new Sound("Sound.Enemy.Death", "Assets/enemy.death.wav");
+		_assets[sound->id()] = sound;
+	}
+
+	//ranged enemy death sound
+	{
+		Sound* sound = new Sound("Sound.Ranged.Enemy.Death", "Assets/ranged.enemy.death.wav");
 		_assets[sound->id()] = sound;
 	}
 }

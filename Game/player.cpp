@@ -19,8 +19,8 @@ Player::Player(std::string id)
 	_range = 50; //DEFAULT = 50. MAX = infinite. MIN = 10
 	_attackDamage = 10; //DEFAULT = 10. MAX = infinte. Min = 1
 
-	_width = 150;
-	_height = 150;
+	_width = 200;
+	_height = 200;
 
 	_translation = Vector_2D(200, 100);
 

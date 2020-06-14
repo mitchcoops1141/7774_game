@@ -87,6 +87,15 @@
     <ClCompile Include="hud.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ranged_enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="spit_ball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animated_texture.h">
@@ -162,6 +171,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="hud.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ranged_enemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spit_ball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wave.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

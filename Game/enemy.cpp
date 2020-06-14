@@ -15,8 +15,8 @@ Enemy::Enemy(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer
 	_isWalking = true;
 	_isAgro = false;
 
-	_width = 150;
-	_height = 150;
+	_width = 200;
+	_height = 200;
 
 	_translation = translation;
 
@@ -29,8 +29,11 @@ Enemy::Enemy(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer
 	_frame_count = 4;
 	_frame_duration_milliseconds = 150;
 
-	_walkingTextureID = "Texture.Enemy.Walk.Down." + std::to_string(time(NULL));
-	_texture_id = _walkingTextureID; //i need this code otherwise error. dont ask why...
+	int rand_num = rand() % 500;
+
+	_walkingTextureID = "Texture.Enemy.Walk.Down." + std::to_string(time(NULL)) + std::to_string(rand_num);
+	//the texture id must include time so string is always diferent. when created at the same time though, the random number on the end diferentiates enemies.
+	_texture_id = _walkingTextureID; //set the texture id
 
 	//create enemy walk down texture
 	{
@@ -45,7 +48,7 @@ Enemy::Enemy(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer
 	}
 	
 	_frame_duration_milliseconds = 100;
-	_agroTextureID = "Texture.Enemy.Agro.Down." + std::to_string(time(NULL));
+	_agroTextureID = "Texture.Enemy.Agro.Down." + std::to_string(time(NULL)) + std::to_string(rand_num);
 
 	//create agro texture
 	{
@@ -56,6 +59,19 @@ Enemy::Enemy(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer
 			_frame_count,
 			_frame_duration_milliseconds,
 			true);
+		assets->add_animated_asset(texture);
+	}
+
+	_frame_count = 14;
+	_deadTextureID = "Texture.Enemy.Death." + std::to_string(time(NULL)) + std::to_string(rand_num);
+	{
+		Animated_Texture* texture = new Animated_Texture(
+			_deadTextureID,
+			"Assets/enemy.death.png",
+			renderer,
+			_frame_count,
+			_frame_duration_milliseconds,
+			false);
 		assets->add_animated_asset(texture);
 	}
 	
@@ -238,11 +254,11 @@ void Enemy::handle_enter_state(State state, Assets* assets, Input*)
 	case State::dead:
 		//texture = dead
 		_deathAnimationTimer_ms = 100 * 14;
-		_texture_id = "Texture.Enemy.Death";
+		_texture_id = _deadTextureID;
 		_speed = 0.f;
 		Sound* sound = (Sound*)assets->get_asset("Sound.Enemy.Death"); //get death sound
-		Mix_PlayChannel(2, sound->data(), 0); //paly sound
-		Mix_Volume(2, MIX_MAX_VOLUME / 3); //lower volume
+		Mix_PlayChannel(3, sound->data(), 0); //paly sound
+		Mix_Volume(3, MIX_MAX_VOLUME / 3); //lower volume
 		
 		break;
 	}

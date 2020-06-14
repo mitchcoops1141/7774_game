@@ -82,7 +82,7 @@ Engine::Engine(std::string window_name, Configuration* config)
 		exit(1);
 	}
 
-	Mix_AllocateChannels(3); //open 3 channels
+	Mix_AllocateChannels(4); //open 3 channels
 }
 
 Engine::~Engine()

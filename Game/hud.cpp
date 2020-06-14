@@ -1,6 +1,7 @@
 #include "hud.h"
 #include "text.h"
 #include "player.h"
+#include "wave.h"
 
 HUD::HUD(std::string id)
 	: Game_Object(id, "Texture.Player.Blank")
@@ -20,11 +21,13 @@ void HUD::simulate_AI(Uint32, Assets*, Input*, Scene* scene, SDL_Renderer*)
 	Game_Object* player = scene->get_game_object("Player"); //get player
 
 	_health = "HP: " + std::to_string(player->hp()) + //set a string for the palyers health
-	"         Dmg: " + std::to_string((int)round(player->attackDamage())) + 
-	"         Atk Spd: " + std::to_string((int)round(player->attackSpeed())) +
-	"         Proj Spd: " + std::to_string((int)round(player->projectile_speed())) +
-	"         Spd: " + std::to_string((int)round(player->speed())) +
-	"         Rng: " + std::to_string((int)round(player->range()));
+		"         Dmg: " + std::to_string((int)round(player->attackDamage())) +
+		"         Atk Spd: " + std::to_string((int)round(player->attackSpeed())) +
+		"         Proj Spd: " + std::to_string((int)round(player->projectile_speed())) +
+		"         Spd: " + std::to_string((int)round(player->speed())) +
+		"         Rng: " + std::to_string((int)round(player->range()));// +
+	//"                        Wave: " + std::to_string(wave->getWave()) +
+	//"         Time: " + std::to_string(wave->getWaveDuration());
 }
 
 void HUD::render(Uint32, Assets*, SDL_Renderer* renderer, Configuration*, Scene*)

@@ -6,8 +6,8 @@ Paper_Ball::Paper_Ball(std::string id, Scene* scene, std::string direction)
 {
 	Game_Object* player = scene->get_game_object("Player");
 
-	_width = 25;
-	_height = 25;
+	_width = 45;
+	_height = 45;
 
 	_speed = player->projectile_speed() / 100;
 	_range = player->range() * 10;

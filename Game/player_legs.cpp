@@ -8,8 +8,8 @@ Player_Legs::Player_Legs(std::string id)
 
 	_state.push(State::Idle);
 
-	_width = 150;
-	_height = 150;
+	_width = 200;
+	_height = 200;
 }
 
 Player_Legs::~Player_Legs()

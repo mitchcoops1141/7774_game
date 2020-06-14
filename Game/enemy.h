@@ -4,6 +4,8 @@
 #include "assets.h"
 #include "sound.h"
 #include <stack>
+#include <random>
+#include <time.h>
 
 
 class Enemy : public Game_Object
@@ -47,4 +49,5 @@ private:
 
 	std::string _walkingTextureID;
 	std::string _agroTextureID;
+	std::string _deadTextureID;
 };

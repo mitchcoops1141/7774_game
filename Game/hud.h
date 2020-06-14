@@ -22,4 +22,6 @@ private:
 	std::string _projectileSpeed;
 	std::string _speed;
 	std::string _range;
+
+	std::string _wave_number;
 };

@@ -8,6 +8,7 @@
 #include "enemy.h"
 #include "text.h"
 #include "hud.h"
+#include "wave.h"
 
 Game_Scene::Game_Scene()
 	: Scene("Game")
@@ -17,6 +18,7 @@ Game_Scene::Game_Scene()
 	add_game_object(new Player("Player"));
 	add_game_object(new Player_Legs("Player.Legs"));
 	add_game_object(new Player_Body("Player.Body"));
+	add_game_object(new Wave("Wave"));
 	//add_game_object(new Enemy("Enemy1", Vector_2D(1700, 200));	
 }
 

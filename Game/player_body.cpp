@@ -1,6 +1,7 @@
 #include "player_body.h"
 #include "paper_ball.h"
 #include "enemy.h"
+#include "ranged_enemy.h"
 #include <iostream>
 #include <string>
 
@@ -10,8 +11,8 @@ Player_Body::Player_Body(std::string id)
 	_translation = Vector_2D(50, 50);
 	_state.push(State::Idle);
 
-	_width = 150;
-	_height = 150;
+	_width = 200;
+	_height = 200;
 
 }
 
@@ -27,7 +28,7 @@ void Player_Body::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Re
 	Game_Object::render(milliseconds_to_simulate, assets, renderer, config, scene);
 }
 
-void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer* renderer)
+void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer*)
 {
 	Game_Object* player = scene->get_game_object("Player"); //get the palyer object
 
@@ -64,7 +65,6 @@ void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, I
 		{
 			_isShooting = true; //set shooting variable to true
 			_shoot_cooldown_ms = texture->get_frame_duration_milliseconds(); //reset the cooldown
-			scene->add_game_object(new Enemy("enemy" + std::to_string(_ballCounter), Vector_2D(1700, 200), assets, renderer));
 		}
 	}
 	else {
