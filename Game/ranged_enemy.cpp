@@ -7,7 +7,7 @@ Ranged_Enemy::Ranged_Enemy(std::string id, Vector_2D translation, Assets* assets
 	: Game_Object(id, _walkingTextureID)
 {
 	_speed = 0.15f;
-	_hp = 15;
+	_hp = 25;
 	_attackSpeed = 150;
 	_range = 500;
 	_knockback = 2;
@@ -84,7 +84,32 @@ Ranged_Enemy::~Ranged_Enemy()
 
 void Ranged_Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer*)
 {
+	//contain the player in the world boundaries
+	if (_translation.x() < 125)
+	{
+		_translation = Vector_2D(125, _translation.y());
+	}
+
+	if (_translation.x() > 3535)
+	{
+		_translation = Vector_2D(3535, _translation.y());
+	}
+
+	if (_translation.y() < 50)
+	{
+		_translation = Vector_2D(_translation.x(), 50);
+	}
+
+	if (_translation.y() > 1750)
+	{
+		_translation = Vector_2D(_translation.x(), 1750);
+	}
+
 	Game_Object* player = scene->get_game_object("Player"); // get player object
+	if (!player)
+	{
+		return;
+	}
 	Vector_2D playerTranslation = player->translation(); //get player objects position
 	Vector_2D directionToPlayer = (playerTranslation - _translation); //get direction to player
 	directionToPlayer.normalize(); //normalize position
@@ -184,7 +209,7 @@ void Ranged_Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, 
 		_deathAnimationTimer_ms -= milliseconds_to_simulate;
 		if (_deathAnimationTimer_ms < milliseconds_to_simulate * 2)
 		{
-			scene->remove_game_object(this->id());
+			_to_be_destroyed = true;
 		}
 		break;
 	}
@@ -234,11 +259,13 @@ void Ranged_Enemy::handle_enter_state(State state, Assets* assets, Input*)
 		_speed = 0.15f;
 		break;
 	case State::shooting:
+	{
 		//texture = agro down
 		_texture_id = _shootingTextureID;
 		_speed = 0.f;
 		_time_to_pop_ms = 600;
 		break;
+	}
 	case State::hurt:
 	{
 		_hurtColorTimer_ms = 250;
@@ -246,14 +273,16 @@ void Ranged_Enemy::handle_enter_state(State state, Assets* assets, Input*)
 		break;
 	}
 	case State::dead:
+	{
 		//texture = dead
 		_deathAnimationTimer_ms = 100 * 13;
 		_texture_id = _deadTextureID;
 		_speed = 0.f;
 		Sound* sound = (Sound*)assets->get_asset("Sound.Ranged.Enemy.Death"); //get death sound
 		Mix_PlayChannel(3, sound->data(), 0); //paly sound
-		Mix_Volume(3, MIX_MAX_VOLUME / 3); //lower volume
+		Mix_Volume(3, MIX_MAX_VOLUME / 2); //lower volume
 		break;
+	}
 	}
 }
 
@@ -265,7 +294,13 @@ void Ranged_Enemy::handle_exit_state(State state, Assets* assets)
 	case State::walking:
 		break;
 	case State::shooting:
+	{
+		//shoot sound effect
+		Sound* sound = (Sound*)assets->get_asset("Sound.Ranged.Enemy.Shoot");
+		Mix_PlayChannel(2, sound->data(), 0);
+		Mix_Volume(2, MIX_MAX_VOLUME / 2);
 		break;
+	}
 	case State::hurt:
 		SDL_SetTextureColorMod(texture->data(), 255, 255, 255);
 		break;

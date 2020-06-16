@@ -14,12 +14,14 @@ Game_Scene::Game_Scene()
 	: Scene("Game")
 {
 	add_game_object(new Background("Background"));
-	add_game_object(new HUD("HUD"));
 	add_game_object(new Player("Player"));
 	add_game_object(new Player_Legs("Player.Legs"));
 	add_game_object(new Player_Body("Player.Body"));
+<<<<<<< HEAD
 	add_game_object(new Wave("Wave"));
-	//add_game_object(new Enemy("Enemy1", Vector_2D(1700, 200));	
+=======
+	add_game_object(new Enemy("Enemy1", Vector_2D(1700, 200)));	
+>>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
 }
 
 Game_Scene::~Game_Scene()
@@ -33,6 +35,10 @@ void Game_Scene::update(SDL_Window* window)
 	_background_color.b = 60;
 
 	Game_Object* player = get_game_object("Player");
+	if (!player)
+	{
+		return;
+	}
 	int w, h;
 	SDL_GetWindowSize(window, &w, &h);
 

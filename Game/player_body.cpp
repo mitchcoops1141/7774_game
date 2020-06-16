@@ -1,9 +1,13 @@
 #include "player_body.h"
 #include "paper_ball.h"
+<<<<<<< HEAD
 #include "enemy.h"
 #include "ranged_enemy.h"
+=======
+>>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
 #include <iostream>
 #include <string>
+#include "hud.h"
 
 Player_Body::Player_Body(std::string id)
 	: Game_Object(id, "Texture.Player.Body.Idle")
@@ -11,8 +15,8 @@ Player_Body::Player_Body(std::string id)
 	_translation = Vector_2D(50, 50);
 	_state.push(State::Idle);
 
-	_width = 200;
-	_height = 200;
+	_width = 175;
+	_height = 175;
 
 }
 
@@ -31,6 +35,10 @@ void Player_Body::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Re
 void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer*)
 {
 	Game_Object* player = scene->get_game_object("Player"); //get the palyer object
+	if (!player)
+	{
+		return;
+	}
 
 	_translation = player->translation(); //set translation of the body to the translation of the player
 
@@ -52,8 +60,6 @@ void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, I
 		_isWalking = false; //player is not walking
 	};
 
-	
-
 	//check if shooting
 	if ((input->is_button_state(Input::Button::SHOOTING_RIGHT, Input::Button_State::DOWN)) //if shooting right
 	|| (input->is_button_state(Input::Button::SHOOTING_LEFT, Input::Button_State::DOWN)) //if shooting left
@@ -65,6 +71,10 @@ void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, I
 		{
 			_isShooting = true; //set shooting variable to true
 			_shoot_cooldown_ms = texture->get_frame_duration_milliseconds(); //reset the cooldown
+<<<<<<< HEAD
+			
+=======
+>>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
 		}
 	}
 	else {

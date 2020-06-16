@@ -71,6 +71,10 @@ void Editor::update(Input* input, Scene* scene, Configuration* config)
     if (input->is_button_state(Input::Button::DECREASE_SPEED, Input::Button_State::PRESSED))
     {
         Player* player = (Player*)scene->get_game_object("Player");
+        if (!player)
+        {
+            return;
+        }
         player->set_speed(player->speed() * 0.9f);
     }
 
@@ -78,6 +82,10 @@ void Editor::update(Input* input, Scene* scene, Configuration* config)
     if (input->is_button_state(Input::Button::INCREASE_SPEED, Input::Button_State::PRESSED))
     {
         Player* player = (Player*)scene->get_game_object("Player");
+        if (!player)
+        {
+            return;
+        }
         player->set_speed(player->speed() * 1.1f);
     }
 

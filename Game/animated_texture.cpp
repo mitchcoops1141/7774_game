@@ -21,11 +21,6 @@ int Animated_Texture::get_frame_count()
 	return _frame_count;
 }
 
-void Animated_Texture::set_frame_count(int frame_count)
-{
-	_frame_count = frame_count;
-}
-
 void Animated_Texture::set_frame_duration_milliseconds(Uint32 frame_duration_milliseconds)
 {
 	_frame_duration_milliseconds = frame_duration_milliseconds;
@@ -34,21 +29,6 @@ void Animated_Texture::set_frame_duration_milliseconds(Uint32 frame_duration_mil
 Uint32 Animated_Texture::get_frame_duration_milliseconds()
 {
 	return _frame_duration_milliseconds;
-}
-
-int Animated_Texture::get_current_frame()
-{
-	return _current_frame;
-}
-
-void Animated_Texture::set_current_frame(int current_frame)
-{
-	_current_frame = current_frame;
-}
-
-bool Animated_Texture::get_should_loop()
-{
-	return _should_loop;
 }
 
 void Animated_Texture::update_frame(Uint32 milliseconds_to_simulate)

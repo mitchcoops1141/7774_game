@@ -25,23 +25,27 @@ void Menu_Buttons::simulate_AI(Uint32, Assets* assets, Input* input, Scene*, SDL
 	switch (_state.top())
 	{
 	case State::Start:
-		if (input->is_button_state(Input::Button::DOWN, Input::Button_State::PRESSED))
+		if ((input->is_button_state(Input::Button::DOWN, Input::Button_State::PRESSED)) || 
+			(input->is_button_state(Input::Button::SHOOTING_DOWN, Input::Button_State::PRESSED)))
 		{
 			push_state(State::Settings, assets, input);
 		}
 		break;
 	case State::Settings:
-		if (input->is_button_state(Input::Button::UP, Input::Button_State::PRESSED))
+		if ((input->is_button_state(Input::Button::UP, Input::Button_State::PRESSED)) ||
+			(input->is_button_state(Input::Button::SHOOTING_UP, Input::Button_State::PRESSED)))
 		{
 			push_state(State::Start, assets, input);
 		}
-		if (input->is_button_state(Input::Button::DOWN, Input::Button_State::PRESSED))
+		if ((input->is_button_state(Input::Button::DOWN, Input::Button_State::PRESSED)) ||
+			(input->is_button_state(Input::Button::SHOOTING_DOWN, Input::Button_State::PRESSED)))
 		{
 			push_state(State::Exit, assets, input);
 		}
 		break;
 	case State::Exit:	
-		if (input->is_button_state(Input::Button::UP, Input::Button_State::PRESSED))
+		if ((input->is_button_state(Input::Button::UP, Input::Button_State::PRESSED)) ||
+			(input->is_button_state(Input::Button::SHOOTING_UP, Input::Button_State::PRESSED)))
 		{
 			push_state(State::Settings, assets, input);
 		}

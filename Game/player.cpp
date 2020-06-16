@@ -7,20 +7,21 @@
 #include <iostream>
 #include "enemy.h"
 #include "text.h"
+#include "hud.h"
 
 
 Player::Player(std::string id)
 	: Game_Object(id, "Texture.Player.Blank"), _generator((int)time(NULL))
 {
 	_speed = 50.f; //DEFAULT = 50. MAX = 100. MIN = 10
-	_hp = 20; //starts at 5?
+	_hp = 5; //starts at 5?
 	_attackSpeed = 25; //DEFAULT = 25. MAX = infinte. MIN = 5
-	_projectileSpeed = 50.f; //DEFAULT = 50. MAX = 100.MIN = 10
+	_projectileSpeed = 50.f; //DEFAULT = 50. MAX = 75. MIN = 10
 	_range = 50; //DEFAULT = 50. MAX = infinite. MIN = 10
 	_attackDamage = 10; //DEFAULT = 10. MAX = infinte. Min = 1
 
-	_width = 200;
-	_height = 200;
+	_width = 175;
+	_height = 175;
 
 	_translation = Vector_2D(200, 100);
 
@@ -28,13 +29,21 @@ Player::Player(std::string id)
 	_collider.set_translation(Vector_2D(_width / 2.0f, (float)_height));
 
 	_state.push(State::Alive);
+
+	_shouldCreateHUD = false;
 }
 Player::~Player()
 {
 }
 
-void Player::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer*)
+void Player::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer* renderer)
 {	
+	if (_shouldCreateHUD) //check if should create HUD
+	{
+		scene->add_game_object(new HUD("HUD", renderer, scene)); //add hud
+		_shouldCreateHUD = false; //set create hud to false
+	}
+
 	//lock attirbutes to there ranges
 	if (_speed < 10)
 	{
@@ -102,9 +111,9 @@ void Player::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input*
 		_translation = Vector_2D(125, _translation.y());
 	}
 
-	if (_translation.x() > 3565)
+	if (_translation.x() > 3535)
 	{
-		_translation = Vector_2D(3565, _translation.y());
+		_translation = Vector_2D(3535, _translation.y());
 	}
 
 	if (_translation.y() < 50)
@@ -112,9 +121,9 @@ void Player::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input*
 		_translation = Vector_2D(_translation.x(), 50);
 	}
 
-	if (_translation.y() > 1835)
+	if (_translation.y() > 1800)
 	{
-		_translation = Vector_2D(_translation.x(), 1835);
+		_translation = Vector_2D(_translation.x(), 1800);
 	}
 
 	bool isDead = false;
@@ -127,7 +136,7 @@ void Player::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input*
 	switch (_state.top())
 	{
 	case State::Alive: //while state is idle
-		
+
 		if (_isHurt)
 		{
 			push_state(State::Hurt, assets, input);
@@ -138,16 +147,45 @@ void Player::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input*
 		}
 		break;
 	case State::Hurt: //while state is in hurt state
+	{
+		//create and render texts
+		Game_Object* hud = scene->get_game_object("HUD"); //get the hud object
+		hud->set_to_be_destroyed(true); //destroy hud at end of frame
+		_shouldCreateHUD = true; //set should create hud to true
+
 		_invincibilityCooldown_ms -= milliseconds_to_simulate;
-		
+
 		if (_invincibilityCooldown_ms < 0)
 		{
 			pop_state(assets, input);
 		}
 		break;
+	}
 	case State::Dead:
-		scene->remove_game_object("Player.Body");
-		scene->remove_game_object("Player.Legs");
+		_speed = 0.f;
+		Game_Object* playerBody = scene->get_game_object("Player.Body");
+		playerBody->set_texture_id("Texture.Player.Blank");
+		if (!playerBody)
+		{
+			return;
+		}
+		Game_Object* playerLegs = scene->get_game_object("Player.Legs");
+		playerLegs->set_texture_id("Texture.Player.Blank");
+		if (!playerLegs)
+		{
+			return;
+		}
+
+		//scene->remove_game_object("Player.Body");
+		//scene->remove_game_object("Player.Legs");
+
+		Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id); //get texture
+		if (texture->get_current_frame() == texture->get_frame_count() - 1) //check if death animation has finished
+		{
+			//scene->get_game_object("Player.Body")->set_to_be_destroyed(true);
+			//scene->get_game_object("Player.Legs")->set_to_be_destroyed(true);
+			_to_be_destroyed = true;
+		}
 		break;
 	}
 

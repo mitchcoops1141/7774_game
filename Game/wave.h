@@ -19,13 +19,19 @@ public:
 
 	void startWave(Assets* assets, SDL_Renderer* renderer, Scene* scene);
 
+	int getWave();
+	int getWaveDuration();
+
+	void increasePlayerStat(Scene* scene);
+
 private:
 
 	int _seed;
 	std::minstd_rand0 _generator;
 
-	int _waveNumber;
-	Uint32 _waveDuration = 2000;
-
 	int enemyCounter = 1;
+
+	SDL_Color _hud_text_color;
+
+	bool _shouldCreateHUD;
 };

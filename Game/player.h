@@ -29,7 +29,6 @@ public:
 	void push_state(State state, Assets* assets, Input* input);
 	void pop_state(Assets* assets, Input* input);
 
-
 private:
 	void handle_enter_state(State state, Assets* assets, Input* input);
 	void handle_exit_state(State state, Assets* assets);
@@ -43,4 +42,5 @@ private:
 	int _seed;
 	std::minstd_rand0 _generator;
 
+	bool _shouldCreateHUD;
 };

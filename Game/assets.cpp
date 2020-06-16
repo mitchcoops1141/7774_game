@@ -337,7 +337,20 @@ Assets::Assets(SDL_Renderer* renderer)
 		_assets[texture->id()] = texture;
 	}
 
-	/*
+<<<<<<< HEAD
+	//spit ball (enemy projectile)
+	{
+	const int frame_count = 8;
+	const Uint32 frame_duration_milliseconds = 100;
+	Animated_Texture* texture = new Animated_Texture(
+		"Texture.Spit.Ball",
+		"Assets/spit.ball.png",
+		renderer,
+		frame_count,
+		frame_duration_milliseconds,
+		true);
+	_assets[texture->id()] = texture;
+=======
 	//Enemy walk
 	{
 		const int frame_count = 4;
@@ -365,7 +378,7 @@ Assets::Assets(SDL_Renderer* renderer)
 			true);
 		_assets[texture->id()] = texture;
 	}
-	
+
 	//enemy dead
 	{
 		const int frame_count = 14;
@@ -378,34 +391,7 @@ Assets::Assets(SDL_Renderer* renderer)
 			frame_duration_milliseconds,
 			false);
 		_assets[texture->id()] = texture;
-	}
-	
-	//ranged enemy dead
-	{
-		const int frame_count = 13;
-		const Uint32 frame_duration_milliseconds = 100;
-		Animated_Texture* texture = new Animated_Texture(
-			"Texture.Ranged.Enemy.Death",
-			"Assets/ranged.enemy.death.png",
-			renderer,
-			frame_count,
-			frame_duration_milliseconds,
-			false);
-		_assets[texture->id()] = texture;
-	}
-	*/
-	//spit ball (enemy projectile)
-	{
-	const int frame_count = 8;
-	const Uint32 frame_duration_milliseconds = 100;
-	Animated_Texture* texture = new Animated_Texture(
-		"Texture.Spit.Ball",
-		"Assets/spit.ball.png",
-		renderer,
-		frame_count,
-		frame_duration_milliseconds,
-		true);
-	_assets[texture->id()] = texture;
+>>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
 	}
 
 	//shield
@@ -433,6 +419,12 @@ Assets::Assets(SDL_Renderer* renderer)
 		Sound* sound = new Sound("Sound.Ranged.Enemy.Death", "Assets/ranged.enemy.death.wav");
 		_assets[sound->id()] = sound;
 	}
+
+	//ranged enemy shoot sound
+	{
+		Sound* sound = new Sound("Sound.Ranged.Enemy.Shoot", "Assets/spitball.wav");
+		_assets[sound->id()] = sound;
+	}
 }
 
 Assets::~Assets()
@@ -449,9 +441,4 @@ Asset* Assets::get_asset(std::string id)
 	}
 
 	return _assets[id];
-}
-
-void Assets::add_animated_asset(Animated_Texture* animated_texture)
-{
-	_assets[animated_texture->id()] = animated_texture;
 }

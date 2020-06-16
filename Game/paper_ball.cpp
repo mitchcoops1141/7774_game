@@ -5,6 +5,10 @@ Paper_Ball::Paper_Ball(std::string id, Scene* scene, std::string direction)
 	: Game_Object(id, "Texture.Paper.Ball")
 {
 	Game_Object* player = scene->get_game_object("Player");
+	if (!player)
+	{
+		return;
+	}
 
 	_width = 45;
 	_height = 45;
@@ -42,7 +46,7 @@ Paper_Ball::~Paper_Ball()
 {
 }
 
-void Paper_Ball::simulate_AI(Uint32, Assets*, Input*, Scene* scene, SDL_Renderer*)
+void Paper_Ball::simulate_AI(Uint32, Assets*, Input*, Scene*, SDL_Renderer*)
 {	
 	Vector_2D direction = (_removePosition - _translation); //get direction to the remove position
 	direction.normalize(); //normalize position
@@ -53,7 +57,7 @@ void Paper_Ball::simulate_AI(Uint32, Assets*, Input*, Scene* scene, SDL_Renderer
 	Vector_2D distanceToRemovePosition = (_translation - _removePosition); //get distance to remove position
 	if (distanceToRemovePosition.magnitude() < 5) //if its less then 5 pixels away (close enough to range number)
 	{
-		scene->remove_game_object(this->id()); //remove this object
+		_to_be_destroyed = true;
 	}
 }
 

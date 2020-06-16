@@ -8,8 +8,8 @@ Player_Legs::Player_Legs(std::string id)
 
 	_state.push(State::Idle);
 
-	_width = 200;
-	_height = 200;
+	_width = 175;
+	_height = 175;
 }
 
 Player_Legs::~Player_Legs()
@@ -31,6 +31,10 @@ void Player_Legs::simulate_AI(Uint32, Assets* assets, Input* input, Scene* scene
 
 
 	Game_Object* player = scene->get_game_object("Player");
+	if (!player)
+	{
+		return;
+	}
 	_translation = player->translation();
 	
 	//check if walking

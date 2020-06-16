@@ -1,2 +1,11 @@
-﻿  engine.cpp
+<<<<<<< HEAD
+﻿  enemy_boss.cpp
+  wave.cpp
+=======
+﻿  enemy.cpp
+  game_scene.cpp
+  main.cpp
+  player.cpp
+>>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
+  Generating Code...
   Game.vcxproj -> C:\Users\mitchell\Desktop\uni\Game Programming\GAME\Game\x64\Debug\Game.exe

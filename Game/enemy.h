@@ -11,7 +11,7 @@
 class Enemy : public Game_Object
 {
 public:
-	Enemy(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer* renderer);
+	Enemy(std::string id, Vector_2D translation);
 	~Enemy();
 
 	virtual void simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer* renderer) override;
@@ -43,6 +43,7 @@ private:
 	bool _isDead;
 	bool _isWalking;
 	bool _isAgro;
+<<<<<<< HEAD
 
 	Uint32 _frame_duration_milliseconds;
 	Uint32 _frame_count;
@@ -50,4 +51,6 @@ private:
 	std::string _walkingTextureID;
 	std::string _agroTextureID;
 	std::string _deadTextureID;
+=======
+>>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
 };

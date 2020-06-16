@@ -15,6 +15,8 @@ public:
 	~Text();
 
 	void render(SDL_Renderer* renderer, Vector_2D translation);
+
+	void setText(SDL_Renderer* renderer, const char* text, SDL_Color color);
 private:
 	SDL_Texture* _data;
 };

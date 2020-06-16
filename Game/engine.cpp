@@ -142,6 +142,15 @@ void Engine::render(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scen
 	{
 		bool operator()(Game_Object* a, Game_Object* b)
 		{
+			if (a->id().find("HUD") != -1 && b->id().find("HUD") == -1) //if a is hud and b is not
+			{
+				return false;
+			}
+			else if (a->id().find("HUD") == -1 && b->id().find("HUD") != -1) //if a is hud and b is not
+			{
+				return true;
+			}
+
 			return a->translation().y() < b->translation().y();
 		}
 	} sort_by_y_order;
@@ -152,7 +161,10 @@ void Engine::render(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scen
 		game_object->render(milliseconds_to_simulate, assets, _renderer, config, scene);
 	}
 
+
+
 	SDL_RenderPresent(_renderer); //render everything
+
 }
 
 SDL_Renderer* Engine::renderer()

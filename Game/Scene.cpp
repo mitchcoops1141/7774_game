@@ -41,8 +41,7 @@ Game_Object* Scene::get_game_object(std::string id)
 {
 	if (_game_objects.find(id) == _game_objects.end())
 	{
-		std::cout << "Attempted to find a game object that does not exist. ID: " << id << std::endl;
-		exit(1);
+		return nullptr;
 	}
 
 	return _game_objects[id]; //get game object

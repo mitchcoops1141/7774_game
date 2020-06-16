@@ -1,14 +1,13 @@
 #include "enemy.h"
 #include <iostream>
-#include <time.h>
 
-Enemy::Enemy(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer* renderer)
-	: Game_Object(id, _walkingTextureID)
+Enemy::Enemy(std::string id, Vector_2D translation)
+	: Game_Object(id, "Texture.Enemy.Walk.Down")
 {
 	_speed = 0.15f;
-	_hp = 15;
+	_hp = 30;
 	_attackSpeed = 20;
-	_range = 350;
+	_range = 500;
 	_knockback = 2;
 
 	_isDead = false;
@@ -24,6 +23,7 @@ Enemy::Enemy(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer
 	_collider.set_translation(Vector_2D(_width / 2.0f, (float)_height));
 
 	_state.push(State::walking);
+<<<<<<< HEAD
 	
 	
 	_frame_count = 4;
@@ -75,6 +75,8 @@ Enemy::Enemy(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer
 		assets->add_animated_asset(texture);
 	}
 	
+=======
+>>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
 }
 
 Enemy::~Enemy()
@@ -83,7 +85,32 @@ Enemy::~Enemy()
 
 void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer*)
 {
+	//contain the player in the world boundaries
+	if (_translation.x() < 125)
+	{
+		_translation = Vector_2D(125, _translation.y());
+	}
+
+	if (_translation.x() > 3535)
+	{
+		_translation = Vector_2D(3535, _translation.y());
+	}
+
+	if (_translation.y() < 50)
+	{
+		_translation = Vector_2D(_translation.x(), 50);
+	}
+
+	if (_translation.y() > 1750)
+	{
+		_translation = Vector_2D(_translation.x(), 1750);
+	}
+
 	Game_Object* player = scene->get_game_object("Player"); // get player object
+	if (!player)
+	{
+		return;
+	}
 	Vector_2D playerTranslation = player->translation(); //get player objects position
 	Vector_2D directionToPlayer = (playerTranslation - _translation); //get direction to player
 	directionToPlayer.normalize(); //normalize position
@@ -136,7 +163,7 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 
 					
 					
-					scene->remove_game_object(game_object->id()); //remove the ball from the scene
+					game_object->set_to_be_destroyed(true);
 				}
 			}
 
@@ -176,8 +203,6 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 		break;
 	case State::hurt: //while state is hurt
 	{
-
-
 		_hurtColorTimer_ms -= milliseconds_to_simulate;
 		if (_hurtColorTimer_ms < int(milliseconds_to_simulate))
 		{
@@ -189,7 +214,7 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 		_deathAnimationTimer_ms -= milliseconds_to_simulate;
 		if (_deathAnimationTimer_ms < milliseconds_to_simulate * 2)
 		{
-			scene->remove_game_object(this->id());
+			_to_be_destroyed = true;
 		}
 		break;
 	}
@@ -198,8 +223,6 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 void Enemy::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config, Scene* scene)
 {
 	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
-	//texture->set_frame_count(_frame_count);
-	//texture->set_frame_duration_milliseconds(_frame_duration);
 	texture->update_frame(milliseconds_to_simulate);
 	Game_Object::render(milliseconds_to_simulate, assets, renderer, config, scene);	
 }
@@ -232,21 +255,22 @@ void Enemy::pop_state(Assets* assets, Input* input)
 
 void Enemy::handle_enter_state(State state, Assets* assets, Input*)
 {
-	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
+	
 	switch (state)
 	{
 	case State::walking:
 		//texture = wlaking down
-		_texture_id = _walkingTextureID;
+		_texture_id = "Texture.Enemy.Walk.Down";
 		_speed = 0.15f;
 		break;
 	case State::agro:
 		//texture = agro down
-		_texture_id = _agroTextureID;
+		_texture_id = "Texture.Enemy.Agro.Down";
 		_speed = 0.25f;
 		break;
 	case State::hurt:
 	{
+		Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
 		_hurtColorTimer_ms = 250;
 		SDL_SetTextureColorMod(texture->data(), 255, 0, 0);
 		break;

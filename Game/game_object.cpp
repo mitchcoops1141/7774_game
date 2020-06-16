@@ -10,6 +10,7 @@ Game_Object::Game_Object(std::string id, std::string texture_id)
 {
 	_id = id;
 	_texture_id = texture_id;
+	_to_be_destroyed = false;
 
 	_width = 100;
 	_height = 100;
@@ -28,6 +29,11 @@ std::string Game_Object::id()
 std::string Game_Object::texture_id()
 {
 	return _texture_id;
+}
+
+void Game_Object::set_texture_id(std::string texture_id)
+{
+	_texture_id = texture_id;
 }
 
 void Game_Object::simulate_physics(Uint32 milliseconds_to_simulate, Assets*, Scene* scene)
@@ -144,6 +150,16 @@ Vector_2D Game_Object::velocity()
 	return _velocity;
 }
 
+void Game_Object::set_to_be_destroyed(bool to_be_destroyed)
+{
+	_to_be_destroyed = to_be_destroyed;
+}
+
+bool Game_Object::to_be_destroyed()
+{
+	return _to_be_destroyed;
+}
+
 void Game_Object::set_speed(float speed)
 {
 	_speed = speed;
@@ -202,4 +218,14 @@ void Game_Object::set_projectileSpeed(float projectile_speed)
 float Game_Object::projectile_speed()
 {
 	return _projectileSpeed;
+}
+
+int Game_Object::waveNumber()
+{
+	return _waveNumber;
+}
+
+Uint32 Game_Object::waveDuration()
+{
+	return _waveDuration;
 }

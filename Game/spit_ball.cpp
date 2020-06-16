@@ -4,6 +4,10 @@ Spit_Ball::Spit_Ball(std::string id, Scene* scene, Vector_2D spawn_location)
 	: Game_Object(id, "Texture.Spit.Ball")
 {
 	Game_Object* player = scene->get_game_object("Player");
+	if (!player)
+	{
+		return;
+	}
 	_width = 35;
 	_height = 35;
 
@@ -25,6 +29,10 @@ Spit_Ball::~Spit_Ball()
 void Spit_Ball::simulate_AI(Uint32, Assets*, Input*, Scene* scene, SDL_Renderer*)
 {
 	Game_Object* player = scene->get_game_object("Player");
+	if (!player)
+	{
+		return;
+	}
 	_velocity += _direction; //move towards the remove position
 	_velocity.scale(_speed); //at the scale of the speed
 
@@ -32,7 +40,7 @@ void Spit_Ball::simulate_AI(Uint32, Assets*, Input*, Scene* scene, SDL_Renderer*
 	Vector_2D distanceToRemovePosition = (_translation - _spawnLocation); //get distance to remove position
 	if (distanceToRemovePosition.magnitude() > _range) //if distance to remove position is > range
 	{
-		scene->remove_game_object(this->id()); //remove this object
+		_to_be_destroyed = true;
 	}
 
 	//if hit player. hurt player. delete object
@@ -40,7 +48,7 @@ void Spit_Ball::simulate_AI(Uint32, Assets*, Input*, Scene* scene, SDL_Renderer*
 	if (distanceToPlayer.magnitude() < player->collider().radius() * 2)
 	{
 		player->set_hp(player->hp() - 1); //subtract from player hp
-		scene->remove_game_object(this->id()); //remove this object
+		_to_be_destroyed = true;
 	}
 }
 
