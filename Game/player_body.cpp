@@ -1,10 +1,7 @@
 #include "player_body.h"
 #include "paper_ball.h"
-<<<<<<< HEAD
 #include "enemy.h"
 #include "ranged_enemy.h"
-=======
->>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
 #include <iostream>
 #include <string>
 #include "hud.h"
@@ -71,10 +68,6 @@ void Player_Body::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, I
 		{
 			_isShooting = true; //set shooting variable to true
 			_shoot_cooldown_ms = texture->get_frame_duration_milliseconds(); //reset the cooldown
-<<<<<<< HEAD
-			
-=======
->>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
 		}
 	}
 	else {
@@ -194,12 +187,9 @@ void Player_Body::handle_enter_state(State state, Assets* assets, Input* input)
 				_shootDirection = "down";
 				Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
 				_time_to_pop_ms = texture->get_frame_duration_milliseconds() * texture->get_frame_count(); //reset the cooldown for determine length of shooting state duration
-			}
+			}	
 
-			std::cout << "time to pop " + std::to_string(_time_to_pop_ms) << std::endl;
-			
-
-			//shooting sounds
+			//shooting sounds?
 		}
 		break;
 	}

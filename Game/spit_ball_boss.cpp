@@ -1,6 +1,6 @@
-#include "Spit_ball.h"
+#include "spit_ball_boss.h"
 
-Spit_Ball::Spit_Ball(std::string id, Scene* scene, Vector_2D spawn_location)
+Spit_Ball_Boss::Spit_Ball_Boss(std::string id, Scene* scene, Vector_2D spawn_location)
 	: Game_Object(id, "Texture.Spit.Ball")
 {
 	Game_Object* player = scene->get_game_object("Player");
@@ -8,12 +8,12 @@ Spit_Ball::Spit_Ball(std::string id, Scene* scene, Vector_2D spawn_location)
 	{
 		return;
 	}
-	_width = 35;
-	_height = 35;
+	_width = 65;
+	_height = 65;
 
-	_speed = 0.4f;
-	_range = 800;
-	
+	_speed = 0.62f;
+	_range = 1000;
+
 	_spawnLocation = spawn_location;
 	_playerLocation = Vector_2D(player->translation().x() + player->width() / 2, player->translation().y() + player->height() / 2);
 	_translation = _spawnLocation;
@@ -22,11 +22,11 @@ Spit_Ball::Spit_Ball(std::string id, Scene* scene, Vector_2D spawn_location)
 	_direction.normalize();
 }
 
-Spit_Ball::~Spit_Ball()
+Spit_Ball_Boss::~Spit_Ball_Boss()
 {
 }
 
-void Spit_Ball::simulate_AI(Uint32, Assets*, Input*, Scene* scene, SDL_Renderer*)
+void Spit_Ball_Boss::simulate_AI(Uint32, Assets*, Input*, Scene * scene, SDL_Renderer*)
 {
 	Game_Object* player = scene->get_game_object("Player");
 	if (!player)
@@ -45,14 +45,14 @@ void Spit_Ball::simulate_AI(Uint32, Assets*, Input*, Scene* scene, SDL_Renderer*
 
 	//if hit player. hurt player. delete object
 	Vector_2D distanceToPlayer = (_translation - Vector_2D(player->translation().x() + player->width() / 2, player->translation().y() + player->height() / 2));
-	if (distanceToPlayer.magnitude() < player->collider().radius() * 2)
+	if (distanceToPlayer.magnitude() < player->collider().radius() * 1.5)
 	{
 		player->set_hp(player->hp() - 1); //subtract from player hp
 		_to_be_destroyed = true;
 	}
 }
 
-void Spit_Ball::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config, Scene* scene)
+void Spit_Ball_Boss::render(Uint32 milliseconds_to_simulate, Assets * assets, SDL_Renderer * renderer, Configuration * config, Scene * scene)
 {
 	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
 	texture->update_frame(milliseconds_to_simulate);

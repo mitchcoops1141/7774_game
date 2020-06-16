@@ -1,22 +1,23 @@
-#include "enemy.h"
+#include "ranged_enemy.h"
+#include "Spit_ball.h"
 #include <iostream>
 #include <time.h>
-#include "enemy_boss.h"
+#include "ranged_enemy_boss.h"
+#include "spit_ball_boss.h"
 
 
-
-Enemy_Boss::Enemy_Boss(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer* renderer)
+Ranged_Enemy_Boss::Ranged_Enemy_Boss(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer* renderer)
 	: Game_Object(id, _walkingTextureID)
 {
 	_speed = 0.25f;
 	_hp = 150;
-	_attackSpeed = 20;
-	_range = 800;
+	_attackSpeed = 100;
+	_range = 850;
 	_knockback = 1.25f;
 
 	_isDead = false;
 	_isWalking = true;
-	_isAgro = false;
+	_isShooting = false;
 
 	_width = 325;
 	_height = 325;
@@ -32,17 +33,17 @@ Enemy_Boss::Enemy_Boss(std::string id, Vector_2D translation, Assets* assets, SD
 	_frame_count = 4;
 	_frame_duration_milliseconds = 150;
 
+
 	int rand_num = rand() % 500;
 
-	_walkingTextureID = "Texture.Enemy.Walk.Down." + std::to_string(time(NULL)) + std::to_string(rand_num);
-	//the texture id must include time so string is always diferent. when created at the same time though, the random number on the end diferentiates enemies.
-	_texture_id = _walkingTextureID; //set the texture id
+	_walkingTextureID = "Texture.Ranged.Enemy.Walk.Down." + std::to_string(time(NULL)) + std::to_string(rand_num);
+	_texture_id = _walkingTextureID; //i need this code otherwise error. dont ask why...
 
 	//create enemy walk down texture
 	{
 		Animated_Texture* texture = new Animated_Texture(
 			_walkingTextureID,
-			"Assets/enemy.walk.down.png",
+			"Assets/ranged.enemy.walk.down.png",
 			renderer,
 			_frame_count,
 			_frame_duration_milliseconds,
@@ -50,14 +51,14 @@ Enemy_Boss::Enemy_Boss(std::string id, Vector_2D translation, Assets* assets, SD
 		assets->add_animated_asset(texture);
 	}
 
-	_frame_duration_milliseconds = 100;
-	_agroTextureID = "Texture.Enemy.Agro.Down." + std::to_string(time(NULL)) + std::to_string(rand_num);
+	_frame_duration_milliseconds = 150;
+	_shootingTextureID = "Texture.Ranged.Enemy.Attack.Down." + std::to_string(time(NULL)) + std::to_string(rand_num);
 
-	//create agro texture
+	//create shooting texture
 	{
 		Animated_Texture* texture = new Animated_Texture(
-			_agroTextureID,
-			"Assets/enemy.agro.down.png",
+			_shootingTextureID,
+			"Assets/ranged.enemy.attack.down.png",
 			renderer,
 			_frame_count,
 			_frame_duration_milliseconds,
@@ -65,26 +66,26 @@ Enemy_Boss::Enemy_Boss(std::string id, Vector_2D translation, Assets* assets, SD
 		assets->add_animated_asset(texture);
 	}
 
-	_frame_count = 14;
-	_deadTextureID = "Texture.Enemy.Death." + std::to_string(time(NULL)) + std::to_string(rand_num);
+	_frame_count = 13;
+	_frame_duration_milliseconds = 100;
+	_deadTextureID = "Texture.Ranged.Enemy.Death." + std::to_string(time(NULL)) + std::to_string(rand_num);
 	{
 		Animated_Texture* texture = new Animated_Texture(
 			_deadTextureID,
-			"Assets/enemy.death.png",
+			"Assets/ranged.enemy.death.png",
 			renderer,
 			_frame_count,
 			_frame_duration_milliseconds,
 			false);
 		assets->add_animated_asset(texture);
 	}
-
 }
 
-Enemy_Boss::~Enemy_Boss()
+Ranged_Enemy_Boss::~Ranged_Enemy_Boss()
 {
 }
 
-void Enemy_Boss::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer*)
+void Ranged_Enemy_Boss::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer*)
 {
 	//contain the enemy in the world boundaries
 	if (_translation.x() < 125)
@@ -121,23 +122,21 @@ void Enemy_Boss::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, In
 	//state variables
 	bool isHurt = false;
 
+	//_shoot_cooldown -= milliseconds_to_simulate;
+
 	if (!_isDead) //run all this code if not dead
 	{
 		Vector_2D distanceToPlayer = (_translation - playerTranslation); //get distance to player
 		if (distanceToPlayer.magnitude() < _range) //if its less then the agro range
 		{
-			_isAgro = true; //set agro to true
+			_isShooting = true; //set agro to true
 			_isWalking = false; //set walking to false
+
 		}
 		else
 		{
-			_isWalking = true; //set walking to true
-			_isAgro = false; //set agro to false
-		}
-
-		if (distanceToPlayer.magnitude() < ((_collider.radius() * 2) - 20)) //if the player is in contact range ot enemy
-		{
-			player->set_hp(player->hp() - 1); //subtract from player hp
+			_isWalking = true; //sets walking to true
+			_isShooting = false; //set agro to false
 		}
 
 		std::vector<Game_Object*> game_objects = scene->get_game_objects(); //get all game objects
@@ -163,21 +162,20 @@ void Enemy_Boss::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, In
 					_velocity.scale(_knockback); //scale it to the knockback
 
 
-
 					game_object->set_to_be_destroyed(true);
 				}
 			}
-
-
 		}
 	}
+
+
 
 	switch (_state.top())
 	{
 	case State::walking: //while state is idle
-		if (_isAgro)
+		if (_isShooting)
 		{
-			push_state(State::agro, assets, input);
+			push_state(State::shooting, assets, input);
 		}
 		if (_isDead)
 		{
@@ -188,18 +186,16 @@ void Enemy_Boss::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, In
 			push_state(State::hurt, assets, input);
 		}
 		break;
-	case State::agro: //while state is agro
-		if (_isWalking)
+	case State::shooting: //while state is agro
+		_time_to_pop_ms -= milliseconds_to_simulate;
+		if (_time_to_pop_ms <= int(milliseconds_to_simulate))
 		{
+			//create spit ball!
+			scene->add_game_object(new Spit_Ball_Boss(_ballID, scene, Vector_2D(_translation.x() + _width / 2, _translation.y() + _height / 2))); //add projectile object
+			_ballCounter++; //add one to the ball counter
+			_ballID = "SpitBallBoss"; //reset the ball id
+			_ballID.append(std::to_string(_ballCounter)); //append the counter to the id to create "ball#"
 			pop_state(assets, input);
-		}
-		if (_isDead)
-		{
-			push_state(State::dead, assets, input);
-		}
-		if (isHurt)
-		{
-			push_state(State::hurt, assets, input);
 		}
 		break;
 	case State::hurt: //while state is hurt
@@ -221,14 +217,14 @@ void Enemy_Boss::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, In
 	}
 }
 
-void Enemy_Boss::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config, Scene* scene)
+void Ranged_Enemy_Boss::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config, Scene* scene)
 {
 	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
 	texture->update_frame(milliseconds_to_simulate);
 	Game_Object::render(milliseconds_to_simulate, assets, renderer, config, scene);
 }
 
-void Enemy_Boss::set_hp(int hp)
+void Ranged_Enemy_Boss::set_hp(int hp)
 {
 	_hp = hp; //set hp
 
@@ -238,7 +234,7 @@ void Enemy_Boss::set_hp(int hp)
 	}
 }
 
-void Enemy_Boss::push_state(State state, Assets* assets, Input* input)
+void Ranged_Enemy_Boss::push_state(State state, Assets* assets, Input* input)
 {
 	handle_exit_state(_state.top(), assets);
 
@@ -246,7 +242,7 @@ void Enemy_Boss::push_state(State state, Assets* assets, Input* input)
 	handle_enter_state(_state.top(), assets, input);
 }
 
-void Enemy_Boss::pop_state(Assets* assets, Input* input)
+void Ranged_Enemy_Boss::pop_state(Assets* assets, Input* input)
 {
 	handle_exit_state(_state.top(), assets);
 
@@ -254,50 +250,59 @@ void Enemy_Boss::pop_state(Assets* assets, Input* input)
 	handle_enter_state(_state.top(), assets, input);
 }
 
-void Enemy_Boss::handle_enter_state(State state, Assets* assets, Input*)
+void Ranged_Enemy_Boss::handle_enter_state(State state, Assets* assets, Input*)
 {
-
+	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
 	switch (state)
 	{
 	case State::walking:
 		//texture = wlaking down
 		_texture_id = _walkingTextureID;
-		_speed = 0.25f;
+		_speed = 0.15f;
 		break;
-	case State::agro:
+	case State::shooting:
+	{
 		//texture = agro down
-		_texture_id = _agroTextureID;
-		_speed = 0.45f;
+		_texture_id = _shootingTextureID;
+		_speed = 0.f;
+		_time_to_pop_ms = 400;
 		break;
+	}
 	case State::hurt:
 	{
-		Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
 		_hurtColorTimer_ms = 250;
 		SDL_SetTextureColorMod(texture->data(), 255, 0, 0);
 		break;
 	}
 	case State::dead:
+	{
 		//texture = dead
-		_deathAnimationTimer_ms = 100 * 14;
+		_deathAnimationTimer_ms = 100 * 13;
 		_texture_id = _deadTextureID;
 		_speed = 0.f;
-		Sound* sound = (Sound*)assets->get_asset("Sound.Enemy.Death"); //get death sound
+		Sound* sound = (Sound*)assets->get_asset("Sound.Ranged.Enemy.Death"); //get death sound
 		Mix_PlayChannel(3, sound->data(), 0); //paly sound
-		Mix_Volume(3, MIX_MAX_VOLUME / 3); //lower volume
-
+		Mix_Volume(3, MIX_MAX_VOLUME / 2); //lower volume
 		break;
+	}
 	}
 }
 
-void Enemy_Boss::handle_exit_state(State state, Assets* assets)
+void Ranged_Enemy_Boss::handle_exit_state(State state, Assets* assets)
 {
 	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
 	switch (state)
 	{
 	case State::walking:
 		break;
-	case State::agro:
+	case State::shooting:
+	{
+		//shoot sound effect
+		Sound* sound = (Sound*)assets->get_asset("Sound.Ranged.Enemy.Shoot");
+		Mix_PlayChannel(2, sound->data(), 0);
+		Mix_Volume(2, MIX_MAX_VOLUME / 2);
 		break;
+	}
 	case State::hurt:
 		SDL_SetTextureColorMod(texture->data(), 255, 255, 255);
 		break;

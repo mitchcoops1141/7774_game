@@ -36,12 +36,9 @@ public:
 
 	Vector_2D velocity();
 
-<<<<<<< HEAD
 	void set_to_be_destroyed(bool to_be_destroyed);
 	bool to_be_destroyed();
 
-=======
->>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
 	void set_speed(float speed);
 	float speed();
 
@@ -77,14 +74,13 @@ protected:
 
 	SDL_RendererFlip _flip;
 
-<<<<<<< HEAD
 	bool _to_be_destroyed;
+
+	Uint32 _spawnDamageTimer;
 
 	//wave attributes
 	int _waveNumber;
 	Uint32 _waveDuration;
-=======
->>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
 
 	//player and enemy attributes
 	float _speed;

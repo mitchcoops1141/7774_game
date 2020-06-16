@@ -29,9 +29,12 @@ private:
 	int _seed;
 	std::minstd_rand0 _generator;
 
-	int enemyCounter = 1;
+	int enemyCounter = 0;
 
 	SDL_Color _hud_text_color;
 
 	bool _shouldCreateHUD;
+	bool _increaseStats;
+
+	std::vector<Game_Object*> _game_objects;
 };

@@ -17,11 +17,8 @@ Game_Scene::Game_Scene()
 	add_game_object(new Player("Player"));
 	add_game_object(new Player_Legs("Player.Legs"));
 	add_game_object(new Player_Body("Player.Body"));
-<<<<<<< HEAD
 	add_game_object(new Wave("Wave"));
-=======
-	add_game_object(new Enemy("Enemy1", Vector_2D(1700, 200)));	
->>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
+	//add_game_object(new Enemy("Enemy1", Vector_2D(1700, 200)));	
 }
 
 Game_Scene::~Game_Scene()

@@ -121,8 +121,15 @@ void Input::get_input()
 			case SDL_SCANCODE_SPACE: //if space bar input
 				if (!is_button_state(Button::SPACE, Button_State::DOWN))
 				{
-				_button_state[Button::SPACE] = Button_State::PRESSED;
+					_button_state[Button::SPACE] = Button_State::PRESSED;
 				}
+				break;
+			case SDL_SCANCODE_ESCAPE: //if esc input
+				if (!is_button_state(Button::ESCAPE, Button_State::DOWN))
+				{
+					_button_state[Button::ESCAPE] = Button_State::PRESSED;
+				}
+				break;
 			}
 			break;
 		case SDL_KEYUP:
@@ -154,6 +161,9 @@ void Input::get_input()
 				break;
 			case SDL_SCANCODE_SPACE:
 				_button_state[Button::SPACE] = Button_State::RELEASED;
+				break;
+			case SDL_SCANCODE_ESCAPE:
+				_button_state[Button::ESCAPE] = Button_State::RELEASED;
 				break;
 			}
 			break;

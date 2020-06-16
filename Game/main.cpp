@@ -14,6 +14,8 @@
 #include "hud.h"
 #include "lose_scene.h"
 #include "lose_text.h"
+#include "settings_scene.h"
+#include "settings_text.h"
 
 #include <stack>
 
@@ -30,8 +32,6 @@ int main(void)
 	std::stack<Scene*> scenes;
 	scenes.push(new Menu_Scene());
 	
-	Game_Object* menu_buttons = scenes.top()->get_game_object("Menu");	
-
 	//calculate frames
 	const Uint32 milliseconds_per_seconds = 1000;
 	const Uint32 frames_per_second        = 60;
@@ -43,6 +43,7 @@ int main(void)
 	bool menuScene = true;
 	bool gameScene = false;
 	bool loseScene = false;
+	bool settingsScene  = false;
 
 	int waveNumber = 0;
 	//main game loop
@@ -50,7 +51,7 @@ int main(void)
 	{
 		if (menuScene)
 		{
-			if ((menu_buttons->texture_id() == "Texture.Menu.Start") && input->is_button_state(Input::Button::SPACE, Input::Button_State::PRESSED))
+			if ((scenes.top()->get_game_object("Menu")->texture_id() == "Texture.Menu.Start") && input->is_button_state(Input::Button::SPACE, Input::Button_State::PRESSED))
 			{
 				//go to game scene
 				scenes.push(new Game_Scene());
@@ -60,12 +61,17 @@ int main(void)
 				menuScene = false;
 				gameScene = true;
 				loseScene = false;
+				settingsScene = false;
 			}
-			else if ((menu_buttons->texture_id() == "Texture.Menu.Settings") && input->is_button_state(Input::Button::SPACE, Input::Button_State::PRESSED))
+			else if ((scenes.top()->get_game_object("Menu")->texture_id() == "Texture.Menu.Settings") && input->is_button_state(Input::Button::SPACE, Input::Button_State::PRESSED))
 			{
 				//go to settings scene
+				menuScene = false;
+				gameScene = false;
+				loseScene = false;
+				settingsScene = true;
 			}
-			else if ((menu_buttons->texture_id() == "Texture.Menu.Exit") && input->is_button_state(Input::Button::SPACE, Input::Button_State::PRESSED))
+			else if ((scenes.top()->get_game_object("Menu")->texture_id() == "Texture.Menu.Exit") && input->is_button_state(Input::Button::SPACE, Input::Button_State::PRESSED))
 			{
 				//exit game
 				exit(0);
@@ -75,6 +81,26 @@ int main(void)
 		{
 			waveNumber = scenes.top()->get_game_object("Wave")->waveNumber(); //keep track of the wave number to pass into the lose / win text later	
 		}
+		else if (settingsScene)
+		{
+			scenes.push(new Settings_Scene());
+			scenes.top()->add_game_object(new Settings_Text("Settings.Text", engine->renderer(), config));
+			if (input->is_button_state(Input::Button::SPACE, Input::Button_State::PRESSED))
+			{
+				scenes.top()->get_game_object("Settings.Text")->set_to_be_destroyed(true);
+				config->hardMode = !(config->hardMode);
+				scenes.top()->add_game_object(new Settings_Text("Settings.Text", engine->renderer(), config));
+			}
+			if (input->is_button_state(Input::Button::ESCAPE, Input::Button_State::PRESSED))
+			{
+				scenes.pop();
+				scenes.push(new Menu_Scene());
+				gameScene = false;
+				menuScene = true;
+				loseScene = false;
+				settingsScene = false;
+			}
+		}
 		else if (loseScene)
 		{
 			if (input->is_button_state(Input::Button::SPACE, Input::Button_State::PRESSED))
@@ -83,6 +109,7 @@ int main(void)
 				gameScene = false;
 				menuScene = true;
 				loseScene = false;
+				settingsScene = false;
 			}
 		}
 		Uint32 previous_frame_duration = frame_end_time_ms - frame_start_time_ms;
@@ -110,10 +137,11 @@ int main(void)
 					delete game_object;
 					scenes.pop();
 					scenes.push(new Lose_scene());
-					scenes.top()->add_game_object(new Lose_text("Lose.Text", engine->renderer(), waveNumber));
+					scenes.top()->add_game_object(new Lose_text("Lose.Text", engine->renderer(), waveNumber + 1));
 					gameScene = false;
 					menuScene = false;
 					loseScene = true;
+					settingsScene = false;
 				}
 				
 			}

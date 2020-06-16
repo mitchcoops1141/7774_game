@@ -31,6 +31,7 @@ Player::Player(std::string id)
 	_state.push(State::Alive);
 
 	_shouldCreateHUD = false;
+	_start = true;
 }
 Player::~Player()
 {
@@ -61,9 +62,9 @@ void Player::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input*
 	{
 		_projectileSpeed = 10;
 	}
-	if (_projectileSpeed > 100)
+	if (_projectileSpeed > 75)
 	{
-		_projectileSpeed = 100;
+		_projectileSpeed = 75;
 	}
 	if (_range < 10)
 	{
@@ -196,6 +197,19 @@ void Player::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Rendere
 	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
 	texture->update_frame(milliseconds_to_simulate);
 
+	if (_start)
+	{
+		if (config->hardMode)
+		{
+			_hp = 3;
+			_start = false;
+		}
+		else
+		{
+			_hp = 5;
+			_start = false;
+		}
+	}
 	Game_Object::render(milliseconds_to_simulate, assets, renderer, config, scene);
 }
 

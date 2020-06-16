@@ -1,11 +1,30 @@
-<<<<<<< HEAD
-﻿  enemy_boss.cpp
-  wave.cpp
-=======
-﻿  enemy.cpp
+﻿  Scene.cpp
+  assets.cpp
+  background.cpp
+  editor.cpp
+  enemy.cpp
+  enemy_boss.cpp
+  engine.cpp
+  game_object.cpp
   game_scene.cpp
+  hud.cpp
+  lose_scene.cpp
+  lose_text.cpp
   main.cpp
+  menu_buttons.cpp
+  menu_scene.cpp
+  paper_ball.cpp
   player.cpp
->>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
+  player_body.cpp
+  player_legs.cpp
+  ranged_enemy.cpp
+  Generating Code...
+  Compiling...
+  ranged_enemy_boss.cpp
+  settings_text.cpp
+  spit_ball.cpp
+  spit_ball_boss.cpp
+  text.cpp
+  wave.cpp
   Generating Code...
   Game.vcxproj -> C:\Users\mitchell\Desktop\uni\Game Programming\GAME\Game\x64\Debug\Game.exe

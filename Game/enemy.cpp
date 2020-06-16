@@ -1,7 +1,7 @@
 #include "enemy.h"
 #include <iostream>
 
-Enemy::Enemy(std::string id, Vector_2D translation)
+Enemy::Enemy(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer* renderer)
 	: Game_Object(id, "Texture.Enemy.Walk.Down")
 {
 	_speed = 0.15f;
@@ -23,11 +23,12 @@ Enemy::Enemy(std::string id, Vector_2D translation)
 	_collider.set_translation(Vector_2D(_width / 2.0f, (float)_height));
 
 	_state.push(State::walking);
-<<<<<<< HEAD
-	
+
 	
 	_frame_count = 4;
 	_frame_duration_milliseconds = 150;
+
+	_spawnDamageTimer = 500;
 
 	int rand_num = rand() % 500;
 
@@ -74,9 +75,6 @@ Enemy::Enemy(std::string id, Vector_2D translation)
 			false);
 		assets->add_animated_asset(texture);
 	}
-	
-=======
->>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
 }
 
 Enemy::~Enemy()
@@ -85,6 +83,7 @@ Enemy::~Enemy()
 
 void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer*)
 {
+	_spawnDamageTimer -= milliseconds_to_simulate;
 	//contain the player in the world boundaries
 	if (_translation.x() < 125)
 	{
@@ -134,9 +133,12 @@ void Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* 
 			_isAgro = false; //set agro to false
 		}
 
-		if (distanceToPlayer.magnitude() < ((_collider.radius() * 2) + 5)) //if the player is in contact range ot enemy
+		if (distanceToPlayer.magnitude() < ((_collider.radius() * 2))) //if the player is in contact range ot enemy
 		{
-			player->set_hp(player->hp() - 1); //subtract from player hp
+			if (_spawnDamageTimer <= milliseconds_to_simulate)
+			{
+				player->set_hp(player->hp() - 1); //subtract from player hp
+			}
 		}
 
 		std::vector<Game_Object*> game_objects = scene->get_game_objects(); //get all game objects
@@ -260,12 +262,12 @@ void Enemy::handle_enter_state(State state, Assets* assets, Input*)
 	{
 	case State::walking:
 		//texture = wlaking down
-		_texture_id = "Texture.Enemy.Walk.Down";
+		_texture_id = _walkingTextureID;
 		_speed = 0.15f;
 		break;
 	case State::agro:
 		//texture = agro down
-		_texture_id = "Texture.Enemy.Agro.Down";
+		_texture_id = _agroTextureID;
 		_speed = 0.25f;
 		break;
 	case State::hurt:

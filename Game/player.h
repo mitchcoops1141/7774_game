@@ -43,4 +43,5 @@ private:
 	std::minstd_rand0 _generator;
 
 	bool _shouldCreateHUD;
+	bool _start;
 };

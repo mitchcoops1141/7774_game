@@ -4,26 +4,24 @@
 #include "assets.h"
 #include "sound.h"
 #include <stack>
-#include <random>
-#include <time.h>
 
 
-class Enemy : public Game_Object
+class Ranged_Enemy_Boss : public Game_Object
 {
 public:
-	Enemy(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer* renderer);
-	~Enemy();
+	Ranged_Enemy_Boss(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer* renderer);
+	~Ranged_Enemy_Boss();
 
 	virtual void simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene, SDL_Renderer* renderer) override;
 	virtual void render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config, Scene* scene) override;
 
 	virtual void set_hp(int hp) override;
-	
+
 
 	enum class State
 	{
 		walking,
-		agro,
+		shooting,
 		hurt,
 		dead
 	};
@@ -42,12 +40,17 @@ private:
 
 	bool _isDead;
 	bool _isWalking;
-	bool _isAgro;
+	bool _isShooting;
 
+	int _time_to_pop_ms;
+	int _shoot_cooldown;
 	Uint32 _frame_duration_milliseconds;
 	Uint32 _frame_count;
 
+	int _ballCounter = 0;
+	std::string _ballID = "SpitBall";
+
 	std::string _walkingTextureID;
-	std::string _agroTextureID;
+	std::string _shootingTextureID;
 	std::string _deadTextureID;
 };

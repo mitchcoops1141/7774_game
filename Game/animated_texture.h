@@ -14,6 +14,7 @@ public:
 	~Animated_Texture();
 
 	int get_frame_count();
+	int get_current_frame();
 
 	void set_frame_duration_milliseconds(Uint32 frame_duration_milliseconds);
 	Uint32 get_frame_duration_milliseconds();

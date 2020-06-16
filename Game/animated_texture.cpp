@@ -21,6 +21,11 @@ int Animated_Texture::get_frame_count()
 	return _frame_count;
 }
 
+int Animated_Texture::get_current_frame()
+{
+	return _current_frame;
+}
+
 void Animated_Texture::set_frame_duration_milliseconds(Uint32 frame_duration_milliseconds)
 {
 	_frame_duration_milliseconds = frame_duration_milliseconds;

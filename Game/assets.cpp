@@ -337,20 +337,20 @@ Assets::Assets(SDL_Renderer* renderer)
 		_assets[texture->id()] = texture;
 	}
 
-<<<<<<< HEAD
 	//spit ball (enemy projectile)
 	{
-	const int frame_count = 8;
-	const Uint32 frame_duration_milliseconds = 100;
-	Animated_Texture* texture = new Animated_Texture(
-		"Texture.Spit.Ball",
-		"Assets/spit.ball.png",
-		renderer,
-		frame_count,
-		frame_duration_milliseconds,
-		true);
-	_assets[texture->id()] = texture;
-=======
+		const int frame_count = 8;
+		const Uint32 frame_duration_milliseconds = 100;
+		Animated_Texture* texture = new Animated_Texture(
+			"Texture.Spit.Ball",
+			"Assets/spit.ball.png",
+			renderer,
+			frame_count,
+			frame_duration_milliseconds,
+			true);
+		_assets[texture->id()] = texture;
+	}
+	/*
 	//Enemy walk
 	{
 		const int frame_count = 4;
@@ -391,9 +391,9 @@ Assets::Assets(SDL_Renderer* renderer)
 			frame_duration_milliseconds,
 			false);
 		_assets[texture->id()] = texture;
->>>>>>> parent of 4fd5077... ENEMIES HAVE INDIVIDUAL ANIMATIONS!
 	}
 
+	*/
 	//shield
 	{
 		const int frame_count = 1;
@@ -441,4 +441,9 @@ Asset* Assets::get_asset(std::string id)
 	}
 
 	return _assets[id];
+}
+
+void Assets::add_animated_asset(Animated_Texture* texture)
+{
+	_assets[texture->id()] = texture;
 }

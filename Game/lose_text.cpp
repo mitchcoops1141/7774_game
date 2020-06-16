@@ -9,8 +9,6 @@ Lose_text::Lose_text(std::string id, SDL_Renderer* renderer, int wave_number)
 	_text_color.b = 255;
 	_text_color.a = 255;
 
-	std::cout << "LOSE TEXT CREATED" << std::endl;
-
 	std::string loseText;
 
 	if (wave_number == 30)

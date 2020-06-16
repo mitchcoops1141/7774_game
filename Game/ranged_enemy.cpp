@@ -6,8 +6,8 @@
 Ranged_Enemy::Ranged_Enemy(std::string id, Vector_2D translation, Assets* assets, SDL_Renderer* renderer)
 	: Game_Object(id, _walkingTextureID)
 {
-	_speed = 0.15f;
-	_hp = 25;
+	_speed = 0.2f;
+	_hp = 30;
 	_attackSpeed = 150;
 	_range = 500;
 	_knockback = 2;
@@ -119,8 +119,6 @@ void Ranged_Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, 
 	//state variables
 	bool isHurt = false;
 
-	_shoot_cooldown -= milliseconds_to_simulate;
-
 	if (!_isDead) //run all this code if not dead
 	{
 		Vector_2D distanceToPlayer = (_translation - playerTranslation); //get distance to player
@@ -158,9 +156,7 @@ void Ranged_Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, 
 					_velocity += game_object->velocity(); //set velocity to balls velocity
 					_velocity.scale(_knockback); //scale it to the knockback
 
-
-
-					scene->remove_game_object(game_object->id()); //remove the ball from the scene
+					game_object->set_to_be_destroyed(true); //destroy object
 				}
 			}
 		}
@@ -184,7 +180,7 @@ void Ranged_Enemy::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, 
 			push_state(State::hurt, assets, input);
 		}
 		break;
-	case State::shooting: //while state is agro
+	case State::shooting: //while state is shooting
 		_time_to_pop_ms -= milliseconds_to_simulate;
 		if (_time_to_pop_ms < int(milliseconds_to_simulate))
 		{
@@ -260,7 +256,6 @@ void Ranged_Enemy::handle_enter_state(State state, Assets* assets, Input*)
 		break;
 	case State::shooting:
 	{
-		//texture = agro down
 		_texture_id = _shootingTextureID;
 		_speed = 0.f;
 		_time_to_pop_ms = 600;
